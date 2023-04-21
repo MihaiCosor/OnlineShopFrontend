@@ -13,8 +13,10 @@ class ProductsGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     final productsData = Provider.of<Products>(context);
     final products = showFavs ? productsData.favoriteItems : productsData.items;
+    double width = MediaQuery.of(context).size.width;
 
     return Container(
+      width: 0.85 * width,
       color: Colors.white,
       child: GridView.builder(
         padding: const EdgeInsets.all(10),
@@ -27,7 +29,7 @@ class ProductsGrid extends StatelessWidget {
           crossAxisCount: 4,
           childAspectRatio: 3 / 2,
           crossAxisSpacing: 50,
-          mainAxisSpacing: 10,
+          mainAxisSpacing: 50,
         ),
       ),
     );

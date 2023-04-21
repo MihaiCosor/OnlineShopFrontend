@@ -4,7 +4,7 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
   const HomeAppBar({super.key});
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight + 10);
 
   @override
   Widget build(BuildContext context) {

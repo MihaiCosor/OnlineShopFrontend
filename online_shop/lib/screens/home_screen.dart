@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../providers/products.dart';
 import '../widgets/home_app_bar.dart';
 import '../widgets/products_grid.dart';
+import '../widgets/filters.dart';
 
 enum FilterOptions {
   favorites,
@@ -48,7 +49,12 @@ class _HomeScreenState extends State<HomeScreen> {
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : ProductsGrid(_showOnlyFavorites),
+          : Row(
+              children: [
+                const Filters(),
+                ProductsGrid(_showOnlyFavorites),
+              ],
+            ),
       drawer: const Drawer(),
     );
   }
