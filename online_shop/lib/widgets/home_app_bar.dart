@@ -17,14 +17,15 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
           Text('Shop', style: TextStyle(color: Colors.black)),
         ],
       ),
-      backgroundColor: Colors.white,
-      foregroundColor: Colors.black,
+      backgroundColor: Theme.of(context).colorScheme.background,
+      foregroundColor: Theme.of(context).colorScheme.surface,
       elevation: 0,
       actions: [
         Theme(
           data: Theme.of(context).copyWith(
             hoverColor: Colors.transparent,
             splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
           ),
           child: PopupMenuButton(
             tooltip: "",
@@ -79,6 +80,7 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
           data: Theme.of(context).copyWith(
             hoverColor: Colors.transparent,
             splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
           ),
           child: PopupMenuButton(
             tooltip: "",

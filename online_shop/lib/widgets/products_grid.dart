@@ -17,7 +17,7 @@ class ProductsGrid extends StatelessWidget {
 
     return Container(
       width: 0.85 * width,
-      color: Colors.white,
+      color: Theme.of(context).colorScheme.background,
       child: GridView.builder(
         padding: const EdgeInsets.all(10),
         itemCount: products.length,
@@ -26,10 +26,10 @@ class ProductsGrid extends StatelessWidget {
           child: const ProductItem(),
         ),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4,
-          childAspectRatio: 3 / 2,
-          crossAxisSpacing: 50,
-          mainAxisSpacing: 50,
+          crossAxisCount: 5,
+          childAspectRatio: 0.9,
+          crossAxisSpacing: 15,
+          mainAxisSpacing: 15,
         ),
       ),
     );

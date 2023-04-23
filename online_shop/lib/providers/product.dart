@@ -21,9 +21,9 @@ class Product with ChangeNotifier {
   });
 
   void _setFavValue(bool newValue) {
-    // isFavorite = newValue;
+    isFavorite = newValue;
 
-    // notifyListeners();
+    notifyListeners();
   }
 
   Future<void> toggleFavoriteStatus() async {
@@ -31,8 +31,8 @@ class Product with ChangeNotifier {
     //       'https://shop-app-20317-default-rtdb.europe-west1.firebasedatabase.app/products/$id.json');
     //   final oldStatus = isFavorite; // Optimistic updating
 
-    //   isFavorite = !isFavorite;
-    //   notifyListeners();
+    isFavorite = !isFavorite;
+    notifyListeners();
 
     //   try {
     //     final response = await http.patch(

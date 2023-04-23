@@ -11,7 +11,7 @@ class Filters extends StatelessWidget {
 
     return Container(
       width: 0.15 * width,
-      color: Colors.white,
+      color: Theme.of(context).colorScheme.background,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

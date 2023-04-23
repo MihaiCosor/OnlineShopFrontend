@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
             primary: const Color.fromARGB(248, 43, 166, 19),
             secondary: const Color.fromARGB(249, 1, 70, 143),
             tertiary: const Color.fromARGB(248, 68, 74, 81),
-            background: const Color.fromARGB(250, 255, 255, 255),
+            background: const Color.fromARGB(248, 255, 255, 255),
             surface: const Color.fromARGB(250, 0, 0, 0),
           ),
           //fontFamily: 'Lato',
