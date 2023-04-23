@@ -5,6 +5,7 @@ import '../providers/products.dart';
 import '../widgets/home_app_bar.dart';
 import '../widgets/products_grid.dart';
 import '../widgets/filters.dart';
+import '../screens/add_product_screen.dart';
 
 enum FilterOptions {
   favorites,
@@ -12,6 +13,8 @@ enum FilterOptions {
 }
 
 class HomeScreen extends StatefulWidget {
+  static const routeName = '/home';
+
   const HomeScreen({super.key});
 
   @override
@@ -56,6 +59,14 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
       drawer: const Drawer(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed(AddProductScreen.routeName);
+        },
+        tooltip: 'Add Product!',
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
