@@ -1,7 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+
+import '../providers/product.dart';
+import '../providers/products.dart';
 
 class AddProductScreen extends StatefulWidget {
   static const routeName = '/add-product';
@@ -21,25 +22,35 @@ class _AddProductScreenState extends State<AddProductScreen> {
   double price = 0.0;
   String imageUrl = "";
 
-  void _incrementCounter() {
-    setState(() {
-      final url = Uri.parse('http://localhost:8080/products');
-      final response = http.post(
-        url,
-        headers: <String, String>{
-          "Content-Type": "application/json; charset=UTF-8"
-        },
-        body: json.encode({
-          'id': id,
-          'title': title,
-          'description': description,
-          'price': price,
-          'imageUrl': imageUrl,
-        }),
+  Future<void> _incrementCounter() async {
+    var editedProduct = Product(
+      id: id,
+      title: title,
+      description: description,
+      price: price,
+      imageUrl: imageUrl,
+      isFavorite: false,
+    );
+    try {
+      await Provider.of<Products>(context, listen: false)
+          .addProduct(editedProduct);
+    } catch (error) {
+      await showDialog<void>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('An error occured!'),
+          content: const Text('Something went wrong.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(ctx).pop();
+              },
+              child: const Text('Okay'),
+            ),
+          ],
+        ),
       );
-
-      print(response);
-    });
+    }
   }
 
   @override

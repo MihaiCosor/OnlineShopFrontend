@@ -151,34 +151,33 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
-    // final url = Uri.parse(
-    //     'https://shop-app-20317-default-rtdb.europe-west1.firebasedatabase.app/products.json');
+    final url = Uri.parse('https://localhost:8080/products');
 
-    // try {
-    //   final response = await http.post(
-    //     url,
-    //     body: json.encode({
-    //       'title': product.title,
-    //       'description': product.description,
-    //       'imageUrl': product.imageUrl,
-    //       'price': product.price,
-    //       'isFavorite': product.isFavorite,
-    //     }),
-    //   );
+    try {
+      final response = await http.post(
+        url,
+        body: json.encode({
+          'title': product.title,
+          'description': product.description,
+          'imageUrl': product.imageUrl,
+          'price': product.price,
+          'isFavorite': product.isFavorite,
+        }),
+      );
 
-    //   final newProduct = Product(
-    //     id: json.decode(response.body)['name'],
-    //     title: product.title,
-    //     description: product.description,
-    //     price: product.price,
-    //     imageUrl: product.imageUrl,
-    //   );
-    //   _items.add(newProduct);
+      final newProduct = Product(
+        id: json.decode(response.body)['name'],
+        title: product.title,
+        description: product.description,
+        price: product.price,
+        imageUrl: product.imageUrl,
+      );
+      _items.add(newProduct);
 
-    //   notifyListeners();
-    // } catch (error) {
-    //   rethrow;
-    // }
+      notifyListeners();
+    } catch (error) {
+      rethrow;
+    }
   }
 
   Future<void> updateProduct(String id, Product newProduct) async {
