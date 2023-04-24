@@ -23,7 +23,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   var _showOnlyFavorites = false;
-  var _isInit = true;
+  var _isInit = false;
   var _isLoading = false;
 
   @override
