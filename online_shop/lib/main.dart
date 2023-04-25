@@ -5,6 +5,7 @@ import './providers/products.dart';
 import '../providers/auth_register_popup_.dart';
 import './screens/home_screen.dart';
 import './screens/add_product_screen.dart';
+import './screens/product_detail.dart';
 
 void main() {
   runApp(const MyApp());
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
         routes: {
           HomeScreen.routeName: (ctx) => const HomeScreen(),
           AddProductScreen.routeName: (ctx) => const AddProductScreen(),
+          ProductDetailScreen.routeName: (ctx) => const ProductDetailScreen(),
         },
       ),
     );

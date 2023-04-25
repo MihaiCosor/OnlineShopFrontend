@@ -59,6 +59,20 @@ class User with ChangeNotifier {
         ),
       );
 
+      print(_name +
+          " " +
+          _surname +
+          " " +
+          _email +
+          " " +
+          _token +
+          " " +
+          _expiryDate.toString());
+
+      if (_expiryDate.isAfter(DateTime.now())) {
+        print("LOGARE CU SUCCES");
+      }
+
       notifyListeners();
     } catch (error) {
       rethrow;

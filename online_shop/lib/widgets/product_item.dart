@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/product.dart';
+import '../screens/product_detail.dart';
 
 class ProductItem extends StatefulWidget {
   const ProductItem({super.key});
@@ -51,10 +52,10 @@ class _ProductItemState extends State<ProductItem> {
                       ),
                     ),
                     onTap: () {
-                      // Navigator.of(context).pushNamed(
-                      //   ProductDetailscreen.routeName,
-                      //   arguments: product.id,
-                      // );
+                      Navigator.of(context).pushNamed(
+                        ProductDetailScreen.routeName,
+                        arguments: product.id,
+                      );
                     },
                   ),
                   Consumer<Product>(

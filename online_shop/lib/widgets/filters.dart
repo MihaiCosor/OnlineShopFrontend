@@ -28,6 +28,22 @@ class Filters extends StatelessWidget {
               PriceSubFilter(description: "Peste 3000"),
             ],
           ),
+          Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: const [
+                Text('Sortare'),
+                SizedBox(
+                  height: 10,
+                ),
+                PriceSubFilter(description: "Sub 1000"),
+                PriceSubFilter(description: "1000 - 2000"),
+                PriceSubFilter(description: "2000 - 3000"),
+                PriceSubFilter(description: "Peste 3000"),
+              ],
+            ),
+          ),
         ],
       ),
     );
