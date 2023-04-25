@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/user.dart';
+import '../providers/auth_register_popup_.dart';
+import '../popups/auth_popup.dart';
+import '../popups/register_popup.dart';
 
 class HomeAppBar extends StatefulWidget with PreferredSizeWidget {
   const HomeAppBar({super.key});
@@ -14,53 +16,8 @@ class HomeAppBar extends StatefulWidget with PreferredSizeWidget {
 }
 
 class _HomeAppBarState extends State<HomeAppBar> {
-  final _form = GlobalKey<FormState>();
-
-  var _isLoading = false;
-  var _isLoginPopUp = true;
-
-  String _email = "";
-  String _password = "";
-
-  Future<void> _submit() async {
-    _form.currentState?.save();
-
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      await Provider.of<User>(context, listen: false).login(_email, _password);
-      print("trece pe aici?");
-    } catch (error) {
-      print("EROARE");
-      // await showDialog<void>(
-      //   context: context,
-      //   builder: (ctx) => AlertDialog(
-      //     title: const Text('An error occured!'),
-      //     content: const Text('Something went wrong.'),
-      //     actions: [
-      //       TextButton(
-      //         onPressed: () {
-      //           Navigator.of(ctx).pop();
-      //         },
-      //         child: const Text('Okay'),
-      //       ),
-      //     ],
-      //   ),
-      // );
-    }
-
-    setState(() {
-      _isLoading = false;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-
     return AppBar(
       title: Row(
         children: const [
@@ -134,97 +91,16 @@ class _HomeAppBarState extends State<HomeAppBar> {
             showDialog(
               context: context,
               builder: (ctx) {
-                return _isLoading
-                    ? const CircularProgressIndicator()
-                    : AlertDialog(
-                        title: SizedBox(
-                          width: 0.2 * width,
-                          height: 0.05 * height,
-                          child: const Text(
-                            'Autentificare',
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        content: SizedBox(
-                          width: 0.2 * width,
-                          height: 0.3 * height,
-                          child: Column(
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.only(bottom: 8),
-                                child:
-                                    Text('Introduceti datele de autentificare'),
-                              ),
-                              Form(
-                                key: _form,
-                                child: Column(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(5),
-                                      child: TextFormField(
-                                        decoration: const InputDecoration(
-                                            labelText: 'Adresa de email'),
-                                        textInputAction: TextInputAction.next,
-                                        onSaved: (value) {
-                                          _email = value!;
-                                        },
-                                        validator: (value) {
-                                          if (value != null && value.isEmpty) {
-                                            return 'Camp obligatoriu!';
-                                          }
-                                          return null;
-                                        },
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(5),
-                                      child: TextFormField(
-                                        obscureText: true,
-                                        decoration: const InputDecoration(
-                                            labelText: 'Parola'),
-                                        textInputAction: TextInputAction.next,
-                                        onSaved: (value) {
-                                          _password = value!;
-                                        },
-                                        validator: (value) {
-                                          if (value != null && value.isEmpty) {
-                                            return 'Camp obligatoriu!';
-                                          }
-                                          return null;
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        actions: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: TextButton(
-                              onPressed: () {
-                                Navigator.of(ctx).pop();
-                              },
-                              child: const Text('Nu'),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: TextButton(
-                              onPressed: () {
-                                if (_form.currentState!.validate()) {
-                                  _submit();
-                                  Navigator.of(ctx).pop();
-                                }
-                              },
-                              child: const Text('Da'),
-                            ),
-                          ),
-                        ],
-                        actionsAlignment: MainAxisAlignment.center,
-                      );
+                return StatefulBuilder(
+                  builder: (ctx2, setState) {
+                    return Consumer<AuthRegister>(
+                      builder: (_, authRegister, __) =>
+                          authRegister.isLoginPopUp
+                              ? const AuthPopup()
+                              : const RegisterPopup(),
+                    );
+                  },
+                );
               },
             );
           },
