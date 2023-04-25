@@ -16,24 +16,20 @@ class AddProductScreen extends StatefulWidget {
 class _AddProductScreenState extends State<AddProductScreen> {
   final _form = GlobalKey<FormState>();
 
-  String id = "";
-  String title = "";
-  String description = "";
-  double price = 0.0;
-  String imageUrl = "";
+  var _editedProduct = Product(
+    id: "",
+    title: "",
+    description: "",
+    price: 0.0,
+    imageUrl: "",
+  );
 
   Future<void> _incrementCounter() async {
-    var editedProduct = Product(
-      id: id,
-      title: title,
-      description: description,
-      price: price,
-      imageUrl: imageUrl,
-      isFavorite: false,
-    );
+    _form.currentState!.save();
+
     try {
       await Provider.of<Products>(context, listen: false)
-          .addProduct(editedProduct);
+          .addProduct(_editedProduct);
     } catch (error) {
       await showDialog<void>(
         context: context,
@@ -70,7 +66,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 decoration: const InputDecoration(labelText: 'Id'),
                 textInputAction: TextInputAction.next,
                 onSaved: (value) {
-                  id = value!;
+                  _editedProduct = Product(
+                    id: value!,
+                    title: _editedProduct.title,
+                    description: _editedProduct.description,
+                    price: _editedProduct.price,
+                    imageUrl: _editedProduct.imageUrl,
+                  );
                 },
               ),
               TextFormField(
@@ -78,7 +80,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 decoration: const InputDecoration(labelText: 'Title'),
                 textInputAction: TextInputAction.next,
                 onSaved: (value) {
-                  title = value!;
+                  _editedProduct = Product(
+                    id: _editedProduct.id,
+                    title: value!,
+                    description: _editedProduct.description,
+                    price: _editedProduct.price,
+                    imageUrl: _editedProduct.imageUrl,
+                  );
                 },
               ),
               TextFormField(
@@ -86,7 +94,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 decoration: const InputDecoration(labelText: 'Description'),
                 textInputAction: TextInputAction.next,
                 onSaved: (value) {
-                  description = value!;
+                  _editedProduct = Product(
+                    id: _editedProduct.id,
+                    title: _editedProduct.title,
+                    description: value!,
+                    price: _editedProduct.price,
+                    imageUrl: _editedProduct.imageUrl,
+                  );
                 },
               ),
               TextFormField(
@@ -94,7 +108,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 decoration: const InputDecoration(labelText: 'Price'),
                 textInputAction: TextInputAction.next,
                 onSaved: (value) {
-                  price = double.parse(value!);
+                  _editedProduct = Product(
+                    id: _editedProduct.id,
+                    title: _editedProduct.title,
+                    description: _editedProduct.description,
+                    price: double.parse(value!),
+                    imageUrl: _editedProduct.imageUrl,
+                  );
                 },
               ),
               TextFormField(
@@ -102,7 +122,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 decoration: const InputDecoration(labelText: 'Image Url'),
                 textInputAction: TextInputAction.next,
                 onSaved: (value) {
-                  imageUrl = value!;
+                  _editedProduct = Product(
+                    id: _editedProduct.id,
+                    title: _editedProduct.title,
+                    description: _editedProduct.description,
+                    price: _editedProduct.price,
+                    imageUrl: value!,
+                  );
                 },
               ),
             ],
