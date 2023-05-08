@@ -54,7 +54,7 @@ class _ProductItemState extends State<ProductItem> {
                     onTap: () {
                       Navigator.of(context).pushNamed(
                         ProductDetailScreen.routeName,
-                        arguments: product.id,
+                        arguments: product,
                       );
                     },
                   ),

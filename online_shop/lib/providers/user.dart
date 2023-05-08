@@ -59,18 +59,53 @@ class User with ChangeNotifier {
         ),
       );
 
-      print(_name +
-          " " +
-          _surname +
-          " " +
-          _email +
-          " " +
-          _token +
-          " " +
-          _expiryDate.toString());
-
       if (_expiryDate.isAfter(DateTime.now())) {
         print("LOGARE CU SUCCES");
+      }
+
+      notifyListeners();
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  Future<void> register(
+      String name, String surname, String email, String password) async {
+    final url = Uri.parse('http://localhost:8080/register');
+
+    try {
+      final response = await http.post(
+        url,
+        headers: <String, String>{
+          "Content-Type": "application/json; charset=UTF-8"
+        },
+        body: json.encode({
+          'name': name,
+          'surname': surname,
+          'email': email,
+          'password': password,
+        }),
+      );
+
+      final responseData = json.decode(response.body);
+
+      if (responseData['error'] != null) {
+        throw HttpException(responseData['error']['message']);
+      }
+
+      _name = responseData['name'];
+      _surname = responseData['surname'];
+      _email = responseData['email'];
+      _isAdmin = responseData['isAdmin'];
+      _token = responseData['token'];
+      _expiryDate = DateTime.now().add(
+        Duration(
+          seconds: int.parse(responseData['expiresIn']),
+        ),
+      );
+
+      if (_expiryDate.isAfter(DateTime.now())) {
+        print("INREGISTRE CU SUCCES");
       }
 
       notifyListeners();

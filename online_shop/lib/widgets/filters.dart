@@ -22,10 +22,10 @@ class Filters extends StatelessWidget {
               SizedBox(
                 height: 10,
               ),
-              PriceSubFilter(description: "Sub 1000"),
-              PriceSubFilter(description: "1000 - 2000"),
-              PriceSubFilter(description: "2000 - 3000"),
-              PriceSubFilter(description: "Peste 3000"),
+              PriceSubFilter(description: "Sub 50"),
+              PriceSubFilter(description: "51 - 100"),
+              PriceSubFilter(description: "101 - 200"),
+              PriceSubFilter(description: "Peste 200"),
             ],
           ),
           Padding(
