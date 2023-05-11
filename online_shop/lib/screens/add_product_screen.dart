@@ -22,6 +22,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
     description: "",
     price: 0.0,
     imageUrl: "",
+    rating: 0.0,
+    numberOfReviews: 0,
   );
 
   Future<void> _incrementCounter() async {
@@ -72,6 +74,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     description: _editedProduct.description,
                     price: _editedProduct.price,
                     imageUrl: _editedProduct.imageUrl,
+                    rating: 0,
+                    numberOfReviews: 0,
                   );
                 },
               ),
@@ -86,6 +90,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     description: _editedProduct.description,
                     price: _editedProduct.price,
                     imageUrl: _editedProduct.imageUrl,
+                    rating: 0,
+                    numberOfReviews: 0,
                   );
                 },
               ),
@@ -100,6 +106,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     description: value!,
                     price: _editedProduct.price,
                     imageUrl: _editedProduct.imageUrl,
+                    rating: 0,
+                    numberOfReviews: 0,
                   );
                 },
               ),
@@ -114,6 +122,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     description: _editedProduct.description,
                     price: double.parse(value!),
                     imageUrl: _editedProduct.imageUrl,
+                    rating: 0,
+                    numberOfReviews: 0,
                   );
                 },
               ),
@@ -128,6 +138,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     description: _editedProduct.description,
                     price: _editedProduct.price,
                     imageUrl: value!,
+                    rating: 0,
+                    numberOfReviews: 0,
                   );
                 },
               ),

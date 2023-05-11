@@ -154,7 +154,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
                                 ),
                                 content: SizedBox(
                                   width: 0.2 * width,
-                                  height: 0.5 * height,
+                                  height: 0.6 * height,
                                   child: Column(
                                     children: [
                                       const Padding(
@@ -292,7 +292,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
                                 ),
                                 content: SizedBox(
                                   width: 0.2 * width,
-                                  height: 0.5 * height,
+                                  height: 0.6 * height,
                                   child: Column(
                                     children: [
                                       const Padding(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/products.dart';
+import '../providers/product.dart';
 import '../widgets/home_app_bar.dart';
 import '../widgets/products_grid.dart';
 import '../widgets/filters.dart';
@@ -22,9 +23,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var _showOnlyFavorites = false;
   var _isInit = false;
   var _isLoading = false;
+
+  Map<String, List<String>> _filters = {
+    'price': [],
+    'rating': [],
+    'numberOfReviews': [],
+  };
 
   @override
   void didChangeDependencies() {
@@ -44,6 +50,12 @@ class _HomeScreenState extends State<HomeScreen> {
     super.didChangeDependencies();
   }
 
+  applyFilters(Map<String, List<String>> filters) {
+    setState(() {
+      _filters = filters;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,8 +66,10 @@ class _HomeScreenState extends State<HomeScreen> {
             )
           : Row(
               children: [
-                const Filters(),
-                ProductsGrid(_showOnlyFavorites),
+                Filters(applyFilters: applyFilters),
+                ProductsGrid(
+                  filters: _filters,
+                ),
               ],
             ),
       drawer: const Drawer(),

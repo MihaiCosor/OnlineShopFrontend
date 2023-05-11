@@ -5,7 +5,9 @@ import '../providers/product.dart';
 import '../screens/product_detail.dart';
 
 class ProductItem extends StatefulWidget {
-  const ProductItem({super.key});
+  final Product product;
+
+  const ProductItem({super.key, required this.product});
 
   @override
   State<ProductItem> createState() => _ProductItemState();
@@ -16,7 +18,6 @@ class _ProductItemState extends State<ProductItem> {
 
   @override
   Widget build(BuildContext context) {
-    final product = Provider.of<Product>(context, listen: false);
     //final cart = Provider.of<Cart>(context, listen: false);
 
     return MouseRegion(
@@ -47,33 +48,31 @@ class _ProductItemState extends State<ProductItem> {
                       height: 100,
                       width: double.infinity,
                       child: Image.network(
-                        product.imageUrl,
+                        widget.product.imageUrl,
                         fit: BoxFit.scaleDown,
                       ),
                     ),
                     onTap: () {
                       Navigator.of(context).pushNamed(
                         ProductDetailScreen.routeName,
-                        arguments: product,
+                        arguments: widget.product,
                       );
                     },
                   ),
-                  Consumer<Product>(
-                    builder: (ctx, product, child) => IconButton(
-                      splashColor: Colors.transparent,
-                      hoverColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      padding: const EdgeInsets.only(top: 15, left: 15),
-                      icon: Icon(
-                        product.isFavorite
-                            ? Icons.favorite_outlined
-                            : Icons.favorite_outline_outlined,
-                      ),
-                      onPressed: () {
-                        product.toggleFavoriteStatus();
-                      },
-                      color: Colors.red,
+                  IconButton(
+                    splashColor: Colors.transparent,
+                    hoverColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    padding: const EdgeInsets.only(top: 15, left: 15),
+                    icon: Icon(
+                      widget.product.isFavorite
+                          ? Icons.favorite_outlined
+                          : Icons.favorite_outline_outlined,
                     ),
+                    onPressed: () {
+                      widget.product.toggleFavoriteStatus();
+                    },
+                    color: Colors.red,
                   ),
                 ],
               ),
@@ -81,7 +80,7 @@ class _ProductItemState extends State<ProductItem> {
             Padding(
               padding: const EdgeInsets.only(top: 15),
               child: Text(
-                product.title,
+                widget.product.title,
                 textAlign: TextAlign.center,
               ),
             ),
@@ -92,15 +91,15 @@ class _ProductItemState extends State<ProductItem> {
                 children: [
                   ...List.generate(5, (index) {
                     return Icon(
-                      index < 3 //product.rating///////////////////////////////////////////////////////////////////////
+                      index <= widget.product.rating - 1
                           ? Icons.star_outlined
                           : Icons.star_border_outlined,
                       color: Theme.of(context).colorScheme.primary,
                     );
                   }),
                   const SizedBox(width: 10),
-                  const Text(
-                      "3.20 (10)") //${product.rating}///////////////////////////////////////////////////////
+                  Text(
+                      "${widget.product.rating} (${widget.product.numberOfReviews})")
                 ],
               ),
             ),
@@ -109,7 +108,7 @@ class _ProductItemState extends State<ProductItem> {
               child: Row(
                 children: [
                   Text(
-                    "${product.price} lei",
+                    "${widget.product.price} lei",
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.bold,
@@ -142,43 +141,5 @@ class _ProductItemState extends State<ProductItem> {
         ),
       ),
     );
-
-    // return ClipRRect(
-    //   borderRadius: BorderRadius.circular(10),
-    //   child: GridTile(
-    //     footer: GridTileBar(
-    //       backgroundColor: Colors.black87,
-    //       leading: Consumer<Product>(
-    //         builder: (ctx, product, child) => IconButton(
-    //           icon: Icon(
-    //             product.isFavorite ? Icons.favorite : Icons.favorite_border,
-    //           ),
-    //           onPressed: () {
-    //             product.toggleFavoriteStatus();
-    //           },
-    //           color: Theme.of(context).colorScheme.secondary,
-    //         ),
-    //       ),
-    //       trailing: IconButton(
-    //         icon: const Icon(Icons.shopping_cart),
-    //         onPressed: () {
-    //           //cart.addItem(product.id, product.price, product.title);
-    //           ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    //           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    //             content: const Text('Added item to cart!'),
-    //             action: SnackBarAction(
-    //               label: 'UNDO',
-    //               onPressed: () {
-    //                 //cart.removeSingeItem(product.id);
-    //               },
-    //             ),
-    //             duration: const Duration(milliseconds: 1500),
-    //           ));
-    //         },
-    //         color: Theme.of(context).colorScheme.secondary,
-    //       ),
-    //     ),
-    //   ),
-    // );
   }
 }

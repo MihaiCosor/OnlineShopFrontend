@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 
-class PriceSubFilter extends StatefulWidget {
-  final String description;
+import './filters.dart';
 
-  const PriceSubFilter({super.key, required this.description});
+class SubFilter extends StatelessWidget {
+  final Function(FilterType, String) updateFilters;
+  final FilterType _filterType;
+  final String _description;
+  final bool _isChecked;
 
-  @override
-  State<PriceSubFilter> createState() => _PriceSubFilterState();
-}
-
-class _PriceSubFilterState extends State<PriceSubFilter> {
-  var _isChecked = false;
+  const SubFilter(
+      {super.key,
+      required this.updateFilters,
+      required FilterType filterType,
+      required String description,
+      required bool isChecked})
+      : _filterType = filterType,
+        _description = description,
+        _isChecked = isChecked;
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +35,10 @@ class _PriceSubFilterState extends State<PriceSubFilter> {
             color: Theme.of(context).colorScheme.primary,
           ),
           onPressed: () {
-            setState(() {
-              _isChecked = !_isChecked;
-            });
+            updateFilters(_filterType, _description);
           },
         ),
-        Text(widget.description),
+        Text(_description),
       ],
     );
   }
