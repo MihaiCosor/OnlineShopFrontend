@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/product.dart';
+import '../providers/cart.dart';
 import '../screens/product_detail.dart';
 
 class ProductItem extends StatefulWidget {
@@ -18,7 +19,7 @@ class _ProductItemState extends State<ProductItem> {
 
   @override
   Widget build(BuildContext context) {
-    //final cart = Provider.of<Cart>(context, listen: false);
+    final cart = Provider.of<Cart>(context, listen: false);
 
     return MouseRegion(
       onExit: (event) => setState(() {
@@ -130,7 +131,21 @@ class _ProductItemState extends State<ProductItem> {
                   IconButton(
                     splashColor: Colors.transparent,
                     hoverColor: Colors.transparent,
-                    onPressed: () {},
+                    onPressed: () {
+                      cart.addItem(widget.product.id, widget.product.price,
+                          widget.product.title);
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: const Text('Added item to cart!'),
+                        action: SnackBarAction(
+                          label: 'UNDO',
+                          onPressed: () {
+                            cart.removeSingeItem(widget.product.id);
+                          },
+                        ),
+                        duration: const Duration(milliseconds: 1500),
+                      ));
+                    },
                     icon: const Icon(Icons.add_circle_outline_outlined),
                     color: Theme.of(context).colorScheme.background,
                   ),

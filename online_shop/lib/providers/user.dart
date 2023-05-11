@@ -24,7 +24,12 @@ class User with ChangeNotifier {
   }
 
   bool get isAuth {
-    return _expiryDate.isAfter(DateTime.now());
+    //return _expiryDate.isAfter(DateTime.now());
+    return true;
+  }
+
+  bool get isAdmin {
+    return _isAdmin;
   }
 
   Future<void> login(String email, String password) async {

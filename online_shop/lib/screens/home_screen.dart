@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/products.dart';
-import '../providers/product.dart';
+import '../providers/user.dart';
 import '../widgets/home_app_bar.dart';
 import '../widgets/products_grid.dart';
 import '../widgets/filters.dart';
@@ -58,6 +58,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<User>(context);
+    bool isAuth = user.isAuth;
+    bool isAdmin = user.isAdmin;
+
     return Scaffold(
       appBar: const HomeAppBar(),
       body: _isLoading
@@ -73,14 +77,16 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
       drawer: const Drawer(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).pushNamed(AddProductScreen.routeName);
-        },
-        tooltip: 'Add Product!',
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: isAuth && isAdmin
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed(AddProductScreen.routeName);
+              },
+              tooltip: 'Add Product!',
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 }

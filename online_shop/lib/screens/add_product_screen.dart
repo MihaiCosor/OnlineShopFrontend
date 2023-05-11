@@ -26,7 +26,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
     numberOfReviews: 0,
   );
 
-  Future<void> _incrementCounter() async {
+  Future<void> _addProdduct() async {
     _form.currentState!.save();
 
     try {
@@ -74,8 +74,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     description: _editedProduct.description,
                     price: _editedProduct.price,
                     imageUrl: _editedProduct.imageUrl,
-                    rating: 0,
-                    numberOfReviews: 0,
+                    rating: _editedProduct.rating,
+                    numberOfReviews: _editedProduct.numberOfReviews,
                   );
                 },
               ),
@@ -90,8 +90,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     description: _editedProduct.description,
                     price: _editedProduct.price,
                     imageUrl: _editedProduct.imageUrl,
-                    rating: 0,
-                    numberOfReviews: 0,
+                    rating: _editedProduct.rating,
+                    numberOfReviews: _editedProduct.numberOfReviews,
                   );
                 },
               ),
@@ -106,8 +106,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     description: value!,
                     price: _editedProduct.price,
                     imageUrl: _editedProduct.imageUrl,
-                    rating: 0,
-                    numberOfReviews: 0,
+                    rating: _editedProduct.rating,
+                    numberOfReviews: _editedProduct.numberOfReviews,
                   );
                 },
               ),
@@ -122,8 +122,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     description: _editedProduct.description,
                     price: double.parse(value!),
                     imageUrl: _editedProduct.imageUrl,
-                    rating: 0,
-                    numberOfReviews: 0,
+                    rating: _editedProduct.rating,
+                    numberOfReviews: _editedProduct.numberOfReviews,
                   );
                 },
               ),
@@ -138,8 +138,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     description: _editedProduct.description,
                     price: _editedProduct.price,
                     imageUrl: value!,
-                    rating: 0,
-                    numberOfReviews: 0,
+                    rating: _editedProduct.rating,
+                    numberOfReviews: _editedProduct.numberOfReviews,
                   );
                 },
               ),
@@ -148,8 +148,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
+        onPressed: _addProdduct,
+        tooltip: 'Add Product',
         child: const Icon(Icons.add),
       ),
     );

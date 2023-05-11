@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/user.dart';
+import '../providers/cart.dart';
+import '../screens/cart_screen.dart';
+import '../screens/orders_screen.dart';
+import '../screens/settings_screen.dart';
+import './my_badge.dart';
 
 class HomeAppBar extends StatefulWidget with PreferredSizeWidget {
   const HomeAppBar({super.key});
@@ -65,6 +70,9 @@ class _HomeAppBarState extends State<HomeAppBar> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
+    final user = Provider.of<User>(context);
+    bool isAuth = user.isAuth;
+
     return AppBar(
       title: Row(
         children: const [
@@ -78,409 +86,34 @@ class _HomeAppBarState extends State<HomeAppBar> {
       foregroundColor: Theme.of(context).colorScheme.surface,
       elevation: 0,
       actions: [
-        Theme(
-          data: Theme.of(context).copyWith(
-            hoverColor: Colors.transparent,
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-          ),
-          child: PopupMenuButton(
-            tooltip: "",
-            onSelected: (selectedValue) {},
-            itemBuilder: (_) => [
-              const PopupMenuItem(
-                child: Text('First Item'),
-              ),
-              const PopupMenuItem(
-                child: Text('Second Item'),
-              ),
-            ],
-            position: PopupMenuPosition.under,
-            child: Row(
-              children: [
-                const SizedBox(
-                  width: 10,
-                ),
-                Icon(
-                  Icons.shopping_cart_outlined,
-                  size: 30,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  'Cosul meu',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.surface,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Icon(
-                  Icons.arrow_drop_down_outlined,
-                  size: 30,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-              ],
-            ),
-          ),
-        ),
         TextButton(
           onPressed: () {
-            showDialog(
-              context: context,
-              builder: (ctx) {
-                return StatefulBuilder(
-                  builder: (ctx2, setState) {
-                    return _isLoading
-                        ? const CircularProgressIndicator()
-                        : _isAuthPopup
-                            ? AlertDialog(
-                                title: SizedBox(
-                                  width: 0.2 * width,
-                                  height: 0.05 * height,
-                                  child: const Text(
-                                    'Autentificare',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                content: SizedBox(
-                                  width: 0.2 * width,
-                                  height: 0.6 * height,
-                                  child: Column(
-                                    children: [
-                                      const Padding(
-                                        padding: EdgeInsets.only(bottom: 8),
-                                        child: Text(
-                                            'Introduceti datele de autentificare'),
-                                      ),
-                                      Form(
-                                        key: _form,
-                                        child: Column(
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.all(5),
-                                              child: TextFormField(
-                                                decoration:
-                                                    const InputDecoration(
-                                                        labelText:
-                                                            'Adresa de email'),
-                                                textInputAction:
-                                                    TextInputAction.next,
-                                                onSaved: (value) {
-                                                  _email = value!;
-                                                },
-                                                validator: (value) {
-                                                  if (value != null &&
-                                                      value.isEmpty) {
-                                                    return 'Camp obligatoriu!';
-                                                  }
-                                                  return null;
-                                                },
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.all(5),
-                                              child: TextFormField(
-                                                obscureText: true,
-                                                decoration:
-                                                    const InputDecoration(
-                                                        labelText: 'Parola'),
-                                                textInputAction:
-                                                    TextInputAction.next,
-                                                onSaved: (value) {
-                                                  _password = value!;
-                                                },
-                                                validator: (value) {
-                                                  if (value != null &&
-                                                      value.isEmpty) {
-                                                    return 'Camp obligatoriu!';
-                                                  }
-                                                  return null;
-                                                },
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 20),
-                                              child: ElevatedButton(
-                                                onPressed: () {
-                                                  if (_form.currentState!
-                                                      .validate()) {
-                                                    _submit();
-                                                    Navigator.of(context).pop();
-                                                  }
-                                                },
-                                                child: const Text('Submit'),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                actions: [
-                                  Padding(
-                                      padding: const EdgeInsets.only(bottom: 8),
-                                      child: _isAuthPopup
-                                          ? ElevatedButton(
-                                              onPressed: () {
-                                                if (!_isAuthPopup) {
-                                                  setState(() {
-                                                    _isAuthPopup = true;
-                                                  });
-                                                }
-                                              },
-                                              child:
-                                                  const Text('Autentificare'),
-                                            )
-                                          : OutlinedButton(
-                                              onPressed: () {
-                                                if (!_isAuthPopup) {
-                                                  setState(() {
-                                                    _isAuthPopup = true;
-                                                  });
-                                                }
-                                              },
-                                              child:
-                                                  const Text('Autentificare'),
-                                            )),
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 8),
-                                    child: _isAuthPopup
-                                        ? OutlinedButton(
-                                            onPressed: () {
-                                              if (_isAuthPopup) {
-                                                setState(() {
-                                                  _isAuthPopup = false;
-                                                });
-                                              }
-                                            },
-                                            child: const Text('Inregistrare'),
-                                          )
-                                        : ElevatedButton(
-                                            onPressed: () {
-                                              if (_isAuthPopup) {
-                                                setState(() {
-                                                  _isAuthPopup = false;
-                                                });
-                                              }
-                                            },
-                                            child: const Text('Inregistrare'),
-                                          ),
-                                  ),
-                                ],
-                                actionsAlignment: MainAxisAlignment.spaceAround,
-                              )
-                            : AlertDialog(
-                                title: SizedBox(
-                                  width: 0.2 * width,
-                                  height: 0.05 * height,
-                                  child: const Text(
-                                    'Inregistrare',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                content: SizedBox(
-                                  width: 0.2 * width,
-                                  height: 0.6 * height,
-                                  child: Column(
-                                    children: [
-                                      const Padding(
-                                        padding: EdgeInsets.only(bottom: 8),
-                                        child: Text(
-                                            'Introduceti datele de inregistrare'),
-                                      ),
-                                      Form(
-                                        key: _form,
-                                        child: Column(
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.all(5),
-                                              child: TextFormField(
-                                                obscureText: true,
-                                                decoration:
-                                                    const InputDecoration(
-                                                        labelText: 'Nume'),
-                                                textInputAction:
-                                                    TextInputAction.next,
-                                                onSaved: (value) {
-                                                  _surname = value!;
-                                                },
-                                                validator: (value) {
-                                                  if (value != null &&
-                                                      value.isEmpty) {
-                                                    return 'Camp obligatoriu!';
-                                                  }
-                                                  return null;
-                                                },
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.all(5),
-                                              child: TextFormField(
-                                                obscureText: true,
-                                                decoration:
-                                                    const InputDecoration(
-                                                        labelText: 'Prenume'),
-                                                textInputAction:
-                                                    TextInputAction.next,
-                                                onSaved: (value) {
-                                                  _name = value!;
-                                                },
-                                                validator: (value) {
-                                                  if (value != null &&
-                                                      value.isEmpty) {
-                                                    return 'Camp obligatoriu!';
-                                                  }
-                                                  return null;
-                                                },
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.all(5),
-                                              child: TextFormField(
-                                                decoration:
-                                                    const InputDecoration(
-                                                        labelText:
-                                                            'Adresa de email'),
-                                                textInputAction:
-                                                    TextInputAction.next,
-                                                onSaved: (value) {
-                                                  _email = value!;
-                                                },
-                                                validator: (value) {
-                                                  if (value != null &&
-                                                      value.isEmpty) {
-                                                    return 'Camp obligatoriu!';
-                                                  }
-                                                  return null;
-                                                },
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.all(5),
-                                              child: TextFormField(
-                                                obscureText: true,
-                                                decoration:
-                                                    const InputDecoration(
-                                                        labelText: 'Parola'),
-                                                textInputAction:
-                                                    TextInputAction.next,
-                                                onSaved: (value) {
-                                                  _password = value!;
-                                                },
-                                                validator: (value) {
-                                                  if (value != null &&
-                                                      value.isEmpty) {
-                                                    return 'Camp obligatoriu!';
-                                                  }
-                                                  return null;
-                                                },
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 20),
-                                              child: ElevatedButton(
-                                                onPressed: () {
-                                                  if (_form.currentState!
-                                                      .validate()) {
-                                                    _submit();
-                                                    Navigator.of(context).pop();
-                                                  }
-                                                },
-                                                child: const Text('Submit'),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                actions: [
-                                  Padding(
-                                      padding: const EdgeInsets.only(bottom: 8),
-                                      child: _isAuthPopup
-                                          ? ElevatedButton(
-                                              onPressed: () {
-                                                if (!_isAuthPopup) {
-                                                  setState(() {
-                                                    _isAuthPopup = true;
-                                                  });
-                                                }
-                                              },
-                                              child:
-                                                  const Text('Autentificare'),
-                                            )
-                                          : OutlinedButton(
-                                              onPressed: () {
-                                                if (!_isAuthPopup) {
-                                                  setState(() {
-                                                    _isAuthPopup = true;
-                                                  });
-                                                }
-                                              },
-                                              child:
-                                                  const Text('Autentificare'),
-                                            )),
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 8),
-                                    child: _isAuthPopup
-                                        ? OutlinedButton(
-                                            onPressed: () {
-                                              if (_isAuthPopup) {
-                                                setState(() {
-                                                  _isAuthPopup = false;
-                                                });
-                                              }
-                                            },
-                                            child: const Text('Inregistrare'),
-                                          )
-                                        : ElevatedButton(
-                                            onPressed: () {
-                                              if (_isAuthPopup) {
-                                                setState(() {
-                                                  _isAuthPopup = false;
-                                                });
-                                              }
-                                            },
-                                            child: const Text('Inregistrare'),
-                                          ),
-                                  ),
-                                ],
-                                actionsAlignment: MainAxisAlignment.spaceAround,
-                              );
-                  },
-                );
-              },
-            );
+            Navigator.of(context).pushNamed(CartScreen.routeName);
           },
           child: Row(
             children: [
               const SizedBox(
-                width: 10,
+                width: 5,
               ),
-              Icon(
-                Icons.person_outline,
-                size: 30,
-                color: Theme.of(context).colorScheme.primary,
+              SizedBox(
+                width: 50,
+                child: Consumer<Cart>(
+                  builder: (_, cart, ch) => MyBadge(
+                    value: cart.itemCount.toString(),
+                    color: Theme.of(context).colorScheme.background,
+                    child: ch!,
+                  ),
+                  child: const Icon(
+                    Icons.shopping_cart,
+                    size: 30,
+                  ),
+                ),
               ),
               const SizedBox(
-                width: 10,
+                width: 15,
               ),
               Text(
-                'Contul meu',
+                'Cosul meu',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -494,6 +127,464 @@ class _HomeAppBarState extends State<HomeAppBar> {
             ],
           ),
         ),
+        isAuth
+            ? Theme(
+                data: Theme.of(context).copyWith(
+                  hoverColor: Colors.transparent,
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                ),
+                child: PopupMenuButton(
+                  tooltip: "",
+                  onSelected: (selectedValue) {
+                    switch (selectedValue) {
+                      case 0:
+                        Navigator.of(context).pushNamed(OrdersScreen.routeName);
+                        break;
+                      case 1:
+                        Navigator.of(context)
+                            .pushNamed(SettingsScreen.routeName);
+                        break;
+                      default:
+                    }
+                  },
+                  itemBuilder: (_) => [
+                    const PopupMenuItem(
+                      value: 0,
+                      child: Text('Comenzi'),
+                    ),
+                    const PopupMenuItem(
+                      value: 1,
+                      child: Text('Setari'),
+                    ),
+                  ],
+                  position: PopupMenuPosition.under,
+                  child: Row(
+                    children: [
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Icon(
+                        Icons.person_outline,
+                        size: 30,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        'Contul meu',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.surface,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Icon(
+                        Icons.arrow_drop_down_outlined,
+                        size: 30,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            : TextButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (ctx) {
+                      return StatefulBuilder(
+                        builder: (ctx2, setState) {
+                          return _isLoading
+                              ? const CircularProgressIndicator()
+                              : _isAuthPopup
+                                  ? AlertDialog(
+                                      title: SizedBox(
+                                        width: 0.2 * width,
+                                        height: 0.05 * height,
+                                        child: const Text(
+                                          'Autentificare',
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                      content: SizedBox(
+                                        width: 0.2 * width,
+                                        height: 0.6 * height,
+                                        child: Column(
+                                          children: [
+                                            const Padding(
+                                              padding:
+                                                  EdgeInsets.only(bottom: 8),
+                                              child: Text(
+                                                  'Introduceti datele de autentificare'),
+                                            ),
+                                            Form(
+                                              key: _form,
+                                              child: Column(
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(5),
+                                                    child: TextFormField(
+                                                      decoration:
+                                                          const InputDecoration(
+                                                              labelText:
+                                                                  'Adresa de email'),
+                                                      textInputAction:
+                                                          TextInputAction.next,
+                                                      onSaved: (value) {
+                                                        _email = value!;
+                                                      },
+                                                      validator: (value) {
+                                                        if (value != null &&
+                                                            value.isEmpty) {
+                                                          return 'Camp obligatoriu!';
+                                                        }
+                                                        return null;
+                                                      },
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(5),
+                                                    child: TextFormField(
+                                                      obscureText: true,
+                                                      decoration:
+                                                          const InputDecoration(
+                                                              labelText:
+                                                                  'Parola'),
+                                                      textInputAction:
+                                                          TextInputAction.next,
+                                                      onSaved: (value) {
+                                                        _password = value!;
+                                                      },
+                                                      validator: (value) {
+                                                        if (value != null &&
+                                                            value.isEmpty) {
+                                                          return 'Camp obligatoriu!';
+                                                        }
+                                                        return null;
+                                                      },
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 20),
+                                                    child: ElevatedButton(
+                                                      onPressed: () {
+                                                        if (_form.currentState!
+                                                            .validate()) {
+                                                          _submit();
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        }
+                                                      },
+                                                      child:
+                                                          const Text('Submit'),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      actions: [
+                                        Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 8),
+                                            child: _isAuthPopup
+                                                ? ElevatedButton(
+                                                    onPressed: () {
+                                                      if (!_isAuthPopup) {
+                                                        setState(() {
+                                                          _isAuthPopup = true;
+                                                        });
+                                                      }
+                                                    },
+                                                    child: const Text(
+                                                        'Autentificare'),
+                                                  )
+                                                : OutlinedButton(
+                                                    onPressed: () {
+                                                      if (!_isAuthPopup) {
+                                                        setState(() {
+                                                          _isAuthPopup = true;
+                                                        });
+                                                      }
+                                                    },
+                                                    child: const Text(
+                                                        'Autentificare'),
+                                                  )),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 8),
+                                          child: _isAuthPopup
+                                              ? OutlinedButton(
+                                                  onPressed: () {
+                                                    if (_isAuthPopup) {
+                                                      setState(() {
+                                                        _isAuthPopup = false;
+                                                      });
+                                                    }
+                                                  },
+                                                  child: const Text(
+                                                      'Inregistrare'),
+                                                )
+                                              : ElevatedButton(
+                                                  onPressed: () {
+                                                    if (_isAuthPopup) {
+                                                      setState(() {
+                                                        _isAuthPopup = false;
+                                                      });
+                                                    }
+                                                  },
+                                                  child: const Text(
+                                                      'Inregistrare'),
+                                                ),
+                                        ),
+                                      ],
+                                      actionsAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                    )
+                                  : AlertDialog(
+                                      title: SizedBox(
+                                        width: 0.2 * width,
+                                        height: 0.05 * height,
+                                        child: const Text(
+                                          'Inregistrare',
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                      content: SizedBox(
+                                        width: 0.2 * width,
+                                        height: 0.6 * height,
+                                        child: Column(
+                                          children: [
+                                            const Padding(
+                                              padding:
+                                                  EdgeInsets.only(bottom: 8),
+                                              child: Text(
+                                                  'Introduceti datele de inregistrare'),
+                                            ),
+                                            Form(
+                                              key: _form,
+                                              child: Column(
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(5),
+                                                    child: TextFormField(
+                                                      obscureText: true,
+                                                      decoration:
+                                                          const InputDecoration(
+                                                              labelText:
+                                                                  'Nume'),
+                                                      textInputAction:
+                                                          TextInputAction.next,
+                                                      onSaved: (value) {
+                                                        _surname = value!;
+                                                      },
+                                                      validator: (value) {
+                                                        if (value != null &&
+                                                            value.isEmpty) {
+                                                          return 'Camp obligatoriu!';
+                                                        }
+                                                        return null;
+                                                      },
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(5),
+                                                    child: TextFormField(
+                                                      obscureText: true,
+                                                      decoration:
+                                                          const InputDecoration(
+                                                              labelText:
+                                                                  'Prenume'),
+                                                      textInputAction:
+                                                          TextInputAction.next,
+                                                      onSaved: (value) {
+                                                        _name = value!;
+                                                      },
+                                                      validator: (value) {
+                                                        if (value != null &&
+                                                            value.isEmpty) {
+                                                          return 'Camp obligatoriu!';
+                                                        }
+                                                        return null;
+                                                      },
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(5),
+                                                    child: TextFormField(
+                                                      decoration:
+                                                          const InputDecoration(
+                                                              labelText:
+                                                                  'Adresa de email'),
+                                                      textInputAction:
+                                                          TextInputAction.next,
+                                                      onSaved: (value) {
+                                                        _email = value!;
+                                                      },
+                                                      validator: (value) {
+                                                        if (value != null &&
+                                                            value.isEmpty) {
+                                                          return 'Camp obligatoriu!';
+                                                        }
+                                                        return null;
+                                                      },
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(5),
+                                                    child: TextFormField(
+                                                      obscureText: true,
+                                                      decoration:
+                                                          const InputDecoration(
+                                                              labelText:
+                                                                  'Parola'),
+                                                      textInputAction:
+                                                          TextInputAction.next,
+                                                      onSaved: (value) {
+                                                        _password = value!;
+                                                      },
+                                                      validator: (value) {
+                                                        if (value != null &&
+                                                            value.isEmpty) {
+                                                          return 'Camp obligatoriu!';
+                                                        }
+                                                        return null;
+                                                      },
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 20),
+                                                    child: ElevatedButton(
+                                                      onPressed: () {
+                                                        if (_form.currentState!
+                                                            .validate()) {
+                                                          _submit();
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        }
+                                                      },
+                                                      child:
+                                                          const Text('Submit'),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      actions: [
+                                        Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 8),
+                                            child: _isAuthPopup
+                                                ? ElevatedButton(
+                                                    onPressed: () {
+                                                      if (!_isAuthPopup) {
+                                                        setState(() {
+                                                          _isAuthPopup = true;
+                                                        });
+                                                      }
+                                                    },
+                                                    child: const Text(
+                                                        'Autentificare'),
+                                                  )
+                                                : OutlinedButton(
+                                                    onPressed: () {
+                                                      if (!_isAuthPopup) {
+                                                        setState(() {
+                                                          _isAuthPopup = true;
+                                                        });
+                                                      }
+                                                    },
+                                                    child: const Text(
+                                                        'Autentificare'),
+                                                  )),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 8),
+                                          child: _isAuthPopup
+                                              ? OutlinedButton(
+                                                  onPressed: () {
+                                                    if (_isAuthPopup) {
+                                                      setState(() {
+                                                        _isAuthPopup = false;
+                                                      });
+                                                    }
+                                                  },
+                                                  child: const Text(
+                                                      'Inregistrare'),
+                                                )
+                                              : ElevatedButton(
+                                                  onPressed: () {
+                                                    if (_isAuthPopup) {
+                                                      setState(() {
+                                                        _isAuthPopup = false;
+                                                      });
+                                                    }
+                                                  },
+                                                  child: const Text(
+                                                      'Inregistrare'),
+                                                ),
+                                        ),
+                                      ],
+                                      actionsAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                    );
+                        },
+                      );
+                    },
+                  );
+                },
+                child: Row(
+                  children: [
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Icon(
+                      Icons.person_outline,
+                      size: 30,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      'Contul meu',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.surface,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                  ],
+                ),
+              ),
         IconButton(
           // TODO: DE SCOS
           onPressed: () {},
