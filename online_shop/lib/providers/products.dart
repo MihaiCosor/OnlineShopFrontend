@@ -6,6 +6,17 @@ import 'package:http/http.dart' as http;
 import '../models/http_exception.dart';
 import 'product.dart';
 
+class SortOptions {
+  static String get priceLowToHigh => "Pret Crescator";
+  static String get priceHighToLow => "Pret Descrescator";
+  static String get ratingLowToHigh => "Rating Crescator";
+  static String get ratingHighToLow => "Rating Descrescator";
+  static String get numberOfReviewsLowToHigh => "Numar de review-uri Crescator";
+  static String get numberOfReviewsHighToLow =>
+      "Numar de review-uri Descrescator";
+  static String get defaultSort => "              ";
+}
+
 class Products with ChangeNotifier {
   List<Product> _items = [
     Product(
@@ -130,8 +141,41 @@ class Products with ChangeNotifier {
     ),
   ];
 
+  String _sortOption = SortOptions.defaultSort;
+  String _searchQuery = "";
+
   List<Product> get items {
+    if (_searchQuery != "") {
+      return [..._items]
+          .where(
+              (element) => element.title.toLowerCase().contains(_searchQuery))
+          .toList();
+    }
+
     return [..._items];
+  }
+
+  List<Product> sortItems(List<Product> items) {
+    switch (_sortOption) {
+      case "              ":
+        return [...items];
+      case "Pret Crescator":
+        return [...items]..sort((a, b) => a.price.compareTo(b.price));
+      case "Pret Descrescator":
+        return [...items]..sort((a, b) => b.price.compareTo(a.price));
+      case "Rating Crescator":
+        return [...items]..sort((a, b) => a.rating.compareTo(b.rating));
+      case "Rating Descrescator":
+        return [...items]..sort((a, b) => b.rating.compareTo(a.rating));
+      case "Numar de review-uri Crescator":
+        return [...items]
+          ..sort((a, b) => a.numberOfReviews.compareTo(b.numberOfReviews));
+      case "Numar de review-uri Descrescator":
+        return [...items]
+          ..sort((a, b) => b.numberOfReviews.compareTo(a.numberOfReviews));
+      default:
+        return [...items];
+    }
   }
 
   List<Product> get favoriteItems {
@@ -140,6 +184,16 @@ class Products with ChangeNotifier {
 
   Product findById(String id) {
     return _items.firstWhere((product) => product.id == id);
+  }
+
+  setSortOption(String sortOption) {
+    _sortOption = sortOption;
+    notifyListeners();
+  }
+
+  setSearchQuery(String searchQuery) {
+    _searchQuery = searchQuery;
+    notifyListeners();
   }
 
   Future<void> fetchAndSetProducts() async {

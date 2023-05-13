@@ -112,35 +112,35 @@ class Orders with ChangeNotifier {
     notifyListeners();
     return;
 
-    final url = Uri.parse('http://localhost:8080/products');
+    // final url = Uri.parse('http://localhost:8080/orders/' + userId);
 
-    final response = await http.get(url);
+    // final response = await http.get(url);
 
-    final List<Order> loadedOrders = [];
-    final extractedData = json.decode(response.body) as Map<String, dynamic>;
+    // final List<Order> loadedOrders = [];
+    // final extractedData = json.decode(response.body) as Map<String, dynamic>;
 
-    // if (extractedData == null) {
-    //   return;
-    // }
+    // // if (extractedData == null) {
+    // //   return;
+    // // }
 
-    extractedData.forEach((orderId, odrderData) {
-      loadedOrders.add(Order(
-        id: orderId,
-        amount: odrderData['amount'],
-        dateTime: DateTime.parse(odrderData['dateTime']),
-        products: (odrderData['products'] as List<dynamic>)
-            .map((item) => CartProduct(
-                id: item['id'],
-                title: item['title'],
-                quantity: item['quantity'],
-                price: item['price']))
-            .toList(),
-      ));
-    });
+    // extractedData.forEach((orderId, odrderData) {
+    //   loadedOrders.add(Order(
+    //     id: orderId,
+    //     amount: odrderData['amount'],
+    //     dateTime: DateTime.parse(odrderData['dateTime']),
+    //     products: (odrderData['products'] as List<dynamic>)
+    //         .map((item) => CartProduct(
+    //             id: item['id'],
+    //             title: item['title'],
+    //             quantity: item['quantity'],
+    //             price: item['price']))
+    //         .toList(),
+    //   ));
+    // });
 
-    _orders = loadedOrders.reversed.toList();
+    // _orders = loadedOrders.reversed.toList();
 
-    notifyListeners();
+    // notifyListeners();
   }
 
   Future<void> addOrder(List<CartProduct> cartProducts, double total) async {

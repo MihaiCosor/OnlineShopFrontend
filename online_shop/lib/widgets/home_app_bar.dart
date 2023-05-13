@@ -1,12 +1,16 @@
+import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/user.dart';
 import '../providers/cart.dart';
+import '../providers/products.dart';
 import '../screens/cart_screen.dart';
 import '../screens/orders_screen.dart';
 import '../screens/settings_screen.dart';
 import './my_badge.dart';
+import './custom_search_delegate.dart';
 
 class HomeAppBar extends StatefulWidget with PreferredSizeWidget {
   const HomeAppBar({super.key});
@@ -28,6 +32,30 @@ class _HomeAppBarState extends State<HomeAppBar> {
   String _surname = "";
   String _email = "";
   String _password = "";
+
+  String _sortOption = SortOptions.defaultSort;
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Start listening to changes.
+    _searchController.addListener(_onSearchInputChange);
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is removed from the widget tree.
+    // This also removes the _printLatestValue listener.
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  _onSearchInputChange() {
+    Provider.of<Products>(context, listen: false)
+        .setSearchQuery(_searchController.text);
+  }
 
   Future<void> _submit() async {
     _form.currentState?.save();
@@ -65,6 +93,13 @@ class _HomeAppBarState extends State<HomeAppBar> {
     });
   }
 
+  _setSortOption(String sortOption) {
+    setState(() {
+      _sortOption = sortOption;
+      Provider.of<Products>(context, listen: false).setSortOption(sortOption);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -86,6 +121,172 @@ class _HomeAppBarState extends State<HomeAppBar> {
       foregroundColor: Theme.of(context).colorScheme.surface,
       elevation: 0,
       actions: [
+        Padding(
+          padding: const EdgeInsets.only(top: 25.0, right: 15.0),
+          child: Text(
+            'Sorteaza dupa ',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.surface,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        Theme(
+          data: Theme.of(context).copyWith(
+            hoverColor: Colors.transparent,
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+          ),
+          child: PopupMenuButton(
+            tooltip: "",
+            onSelected: (selectedValue) {
+              switch (selectedValue) {
+                case 0:
+                  _setSortOption(SortOptions.priceLowToHigh);
+                  break;
+                case 1:
+                  _setSortOption(SortOptions.priceHighToLow);
+                  break;
+                case 2:
+                  _setSortOption(SortOptions.ratingLowToHigh);
+                  break;
+                case 3:
+                  _setSortOption(SortOptions.ratingHighToLow);
+                  break;
+                case 4:
+                  _setSortOption(SortOptions.numberOfReviewsLowToHigh);
+                  break;
+                case 5:
+                  _setSortOption(SortOptions.numberOfReviewsHighToLow);
+                  break;
+                case 6:
+                  _setSortOption(SortOptions.defaultSort);
+                  break;
+                default:
+              }
+            },
+            itemBuilder: (_) => [
+              PopupMenuItem(
+                value: 0,
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Text(
+                    SortOptions.priceLowToHigh.toString(),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                value: 1,
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Text(
+                    SortOptions.priceHighToLow.toString(),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                value: 2,
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Text(
+                    SortOptions.ratingLowToHigh.toString(),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                value: 3,
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Text(
+                    SortOptions.ratingHighToLow.toString(),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                value: 4,
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Text(
+                    SortOptions.numberOfReviewsLowToHigh.toString(),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                value: 5,
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Text(
+                    SortOptions.numberOfReviewsHighToLow.toString(),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+              const PopupMenuItem(
+                value: 6,
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Text(
+                    "Nesortat",
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              )
+            ],
+            position: PopupMenuPosition.under,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20.0),
+              child: Container(
+                padding: const EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color:
+                        Theme.of(context).colorScheme.surface.withOpacity(0.5),
+                    width: 1,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  _sortOption.toString(),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.surface,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(
+          width: 50,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 15.0),
+          child: AnimSearchBar(
+            boxShadow: false,
+            helpText: "Cauta produsul dorit ...",
+            width: 400,
+            color: Theme.of(context).colorScheme.primary,
+            textController: _searchController,
+            onSuffixTap: () {
+              setState(() {
+                _searchController.clear();
+              });
+            },
+            onSubmitted: (value) {},
+          ),
+        ),
+        const SizedBox(
+          width: 50,
+        ),
         TextButton(
           onPressed: () {
             Navigator.of(context).pushNamed(CartScreen.routeName);

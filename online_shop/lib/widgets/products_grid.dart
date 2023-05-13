@@ -77,6 +77,8 @@ class ProductsGrid extends StatelessWidget {
       }
     });
 
+    products = productsData.sortItems(products);
+
     double width = MediaQuery.of(context).size.width;
 
     return Container(
