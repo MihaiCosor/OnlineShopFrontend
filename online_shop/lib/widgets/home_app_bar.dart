@@ -1,6 +1,5 @@
 import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/user.dart';
@@ -10,7 +9,6 @@ import '../screens/cart_screen.dart';
 import '../screens/orders_screen.dart';
 import '../screens/settings_screen.dart';
 import './my_badge.dart';
-import './custom_search_delegate.dart';
 
 class HomeAppBar extends StatefulWidget with PreferredSizeWidget {
   const HomeAppBar({super.key});
@@ -53,8 +51,8 @@ class _HomeAppBarState extends State<HomeAppBar> {
   }
 
   _onSearchInputChange() {
-    Provider.of<Products>(context, listen: false)
-        .setSearchQuery(_searchController.text);
+    Provider.of<Products>(context, listen: false).setSearchQuery =
+        _searchController.text;
   }
 
   Future<void> _submit() async {
@@ -96,7 +94,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
   _setSortOption(String sortOption) {
     setState(() {
       _sortOption = sortOption;
-      Provider.of<Products>(context, listen: false).setSortOption(sortOption);
+      Provider.of<Products>(context, listen: false).setSortOption = sortOption;
     });
   }
 
@@ -786,13 +784,6 @@ class _HomeAppBarState extends State<HomeAppBar> {
                   ],
                 ),
               ),
-        IconButton(
-          // TODO: DE SCOS
-          onPressed: () {},
-          icon: const Icon(
-            Icons.person_outline,
-          ),
-        ),
       ],
     );
   }

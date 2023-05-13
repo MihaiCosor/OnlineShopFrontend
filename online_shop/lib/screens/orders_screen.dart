@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/orders.dart' show Orders;
 import '../widgets/order_item.dart';
+import '../widgets/app_drawer.dart';
 
 class OrdersScreen extends StatefulWidget {
   static const routeName = '/orders';
@@ -30,33 +31,35 @@ class _OrdersScreenState extends State<OrdersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Your Orders'),
-        ),
-        body: FutureBuilder(
-          future: _ordersFuture,
-          builder: (ctx, dataSnapshot) {
-            if (dataSnapshot.connectionState == ConnectionState.waiting) {
+      appBar: AppBar(
+        title: const Text('Your Orders'),
+      ),
+      body: FutureBuilder(
+        future: _ordersFuture,
+        builder: (ctx, dataSnapshot) {
+          if (dataSnapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            if (dataSnapshot.error != null) {
+              // error handling
               return const Center(
-                child: CircularProgressIndicator(),
+                child: Text('An error occured!'),
               );
             } else {
-              if (dataSnapshot.error != null) {
-                // error handling
-                return const Center(
-                  child: Text('An error occured!'),
-                );
-              } else {
-                return Consumer<Orders>(
-                  builder: (ctx, ordersData, child) => ListView.builder(
-                    itemCount: ordersData.orders.length,
-                    itemBuilder: (ctx, index) =>
-                        OrderItem(order: ordersData.orders[index]),
-                  ),
-                );
-              }
+              return Consumer<Orders>(
+                builder: (ctx, ordersData, child) => ListView.builder(
+                  itemCount: ordersData.orders.length,
+                  itemBuilder: (ctx, index) =>
+                      OrderItem(order: ordersData.orders[index]),
+                ),
+              );
             }
-          },
-        ));
+          }
+        },
+      ),
+      drawer: const AppDrawer(),
+    );
   }
 }

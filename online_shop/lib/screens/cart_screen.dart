@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/cart.dart' show Cart;
 import '../widgets/cart_item.dart';
+import '../widgets/app_drawer.dart';
 import '../providers/orders.dart';
 
 class CartScreen extends StatelessWidget {
@@ -65,6 +66,7 @@ class CartScreen extends StatelessWidget {
           ),
         ],
       ),
+      drawer: const AppDrawer(),
     );
   }
 }

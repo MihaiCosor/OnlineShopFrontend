@@ -6,6 +6,7 @@ import '../providers/user.dart';
 import '../widgets/home_app_bar.dart';
 import '../widgets/products_grid.dart';
 import '../widgets/filters.dart';
+import '../widgets/app_drawer.dart';
 import '../screens/add_product_screen.dart';
 
 enum FilterOptions {
@@ -76,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-      drawer: const Drawer(),
+      drawer: const AppDrawer(),
       floatingActionButton: isAuth && isAdmin
           ? FloatingActionButton(
               onPressed: () {

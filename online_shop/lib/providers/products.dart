@@ -179,19 +179,21 @@ class Products with ChangeNotifier {
   }
 
   List<Product> get favoriteItems {
+    // !!!!!
     return _items.where((product) => product.isFavorite).toList();
   }
 
   Product findById(String id) {
+    // !!!!!
     return _items.firstWhere((product) => product.id == id);
   }
 
-  setSortOption(String sortOption) {
+  set setSortOption(String sortOption) {
     _sortOption = sortOption;
     notifyListeners();
   }
 
-  setSearchQuery(String searchQuery) {
+  set setSearchQuery(String searchQuery) {
     _searchQuery = searchQuery;
     notifyListeners();
   }

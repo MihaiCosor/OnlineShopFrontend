@@ -12,6 +12,7 @@ class User with ChangeNotifier {
   String _email = '';
 
   bool _isAdmin = false;
+  bool _isLogged = false;
 
   String _token = '';
   DateTime _expiryDate = DateTime.now();
@@ -25,11 +26,21 @@ class User with ChangeNotifier {
 
   bool get isAuth {
     //return _expiryDate.isAfter(DateTime.now());
-    return true;
+    return _isLogged;
   }
 
   bool get isAdmin {
     return _isAdmin;
+  }
+
+  set setIsAdmin(bool value) {
+    _isAdmin = value;
+    notifyListeners();
+  }
+
+  set setIsLogged(bool value) {
+    _isLogged = value;
+    notifyListeners();
   }
 
   Future<void> login(String email, String password) async {
