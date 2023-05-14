@@ -290,6 +290,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
             Navigator.of(context).pushNamed(CartScreen.routeName);
           },
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               const SizedBox(
                 width: 5,
