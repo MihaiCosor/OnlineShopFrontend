@@ -51,6 +51,26 @@ class ProductDetailScreen extends StatelessWidget {
                     fontSize: 20,
                   ),
                 ),
+                const SizedBox(height: 30),
+                const Center(
+                  child: Text(
+                    'Review-ul tau',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
+                const SizedBox(height: 15),
+                const RatingBarList(),
+                const SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton(
+                    onPressed: () {},
+                    child: const Text(
+                      'Submit',
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
+                    )),
               ],
             ),
             Column(
@@ -66,7 +86,27 @@ class ProductDetailScreen extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                const RatingBarList(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    ...List.generate(5, (index) {
+                      return Icon(
+                        index <= product.rating - 1
+                            ? Icons.star_outlined
+                            : Icons.star_border_outlined,
+                        color: Theme.of(context).colorScheme.primary,
+                        size: 30,
+                      );
+                    }),
+                    const SizedBox(width: 10),
+                    Text(
+                      "${product.rating} (${product.numberOfReviews})",
+                      style: const TextStyle(
+                        fontSize: 20,
+                      ),
+                    )
+                  ],
+                ),
                 const SizedBox(
                   height: 20,
                 ),
@@ -133,9 +173,9 @@ class _RatingState extends State<RatingBarList> {
 
   Widget buildRating() => RatingBar.builder(
         initialRating: rating,
-        itemBuilder: (context, _) => const Icon(
+        itemBuilder: (context, _) => Icon(
           Icons.star,
-          color: Colors.yellow,
+          color: Theme.of(context).colorScheme.primary,
         ),
         onRatingUpdate: (rating) => {
           setState(() => {
@@ -148,14 +188,8 @@ class _RatingState extends State<RatingBarList> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ElevatedButton(
-          onPressed: () => showRating(),
-          child: const Center(
-            child: Text(
-              'Rating',
-              style: TextStyle(fontSize: 32),
-            ),
-          ),
+        Center(
+          child: buildRating(),
         ),
       ],
     );
