@@ -12,13 +12,25 @@ class User with ChangeNotifier {
   String _email = '';
 
   bool _isAdmin = false;
-  bool _isLogged = false;
+  bool _isLogged = true;
 
   String _token = '';
   DateTime _expiryDate = DateTime.now();
 
   List<Product> _favoriteItems = [];
   //TODO: list de recenzii
+
+  String get name {
+    return _name;
+  }
+
+  String get surname {
+    return _surname;
+  }
+
+  String get email {
+    return _email;
+  }
 
   List<Product> get favoriteItems {
     return [..._favoriteItems];
@@ -33,13 +45,17 @@ class User with ChangeNotifier {
     return _isAdmin;
   }
 
-  set setIsAdmin(bool value) {
-    _isAdmin = value;
-    notifyListeners();
-  }
+  logout() {
+    _name = '';
+    _surname = '';
+    _email = '';
+    _isAdmin = false;
+    _isLogged = false;
+    _token = '';
+    _expiryDate = DateTime.now();
+    _favoriteItems = [];
 
-  set setIsLogged(bool value) {
-    _isLogged = value;
+    _isLogged = false;
     notifyListeners();
   }
 
