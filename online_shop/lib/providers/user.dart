@@ -7,6 +7,7 @@ import '../models/http_exception.dart';
 import 'product.dart';
 
 class User with ChangeNotifier {
+  String _id = '';
   String _name = '';
   String _surname = '';
   String _email = '';
@@ -16,6 +17,10 @@ class User with ChangeNotifier {
 
   String _token = '';
   DateTime _expiryDate = DateTime.now();
+
+  String get getEmail {
+    return _email;
+  }
 
   List<Product> _favoriteItems = [];
   //TODO: list de recenzii
@@ -64,6 +69,7 @@ class User with ChangeNotifier {
         throw HttpException(responseData['error']['message']);
       }
 
+      _id = responseData['id'];
       _name = responseData['name'];
       _surname = responseData['surname'];
       _email = responseData['email'];
@@ -109,6 +115,7 @@ class User with ChangeNotifier {
         throw HttpException(responseData['error']['message']);
       }
 
+      _id = responseData['id'];
       _name = responseData['name'];
       _surname = responseData['surname'];
       _email = responseData['email'];
@@ -122,6 +129,39 @@ class User with ChangeNotifier {
 
       if (_expiryDate.isAfter(DateTime.now())) {
         print("INREGISTRE CU SUCCES");
+      }
+
+      notifyListeners();
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  Future<void> rating(double rating, String idProd, String idUser) async {
+    final url = Uri.parse('http://localhost:8080/rating');
+    print('In rating');
+    print(rating);
+    print(idProd);
+    print(idUser);
+
+    try {
+      final response = await http.post(
+        url,
+        headers: <String, String>{
+          "Content-Type": "application/json; charset=UTF-8"
+        },
+        body: json.encode({
+          'rating': rating,
+          'idProd': idProd,
+          'idUser': idUser,
+        }),
+      );
+
+      final responseData = json.decode(response.body);
+      print(responseData.toString());
+
+      if (responseData['error'] != null) {
+        throw HttpException(responseData['error']['message']);
       }
 
       notifyListeners();

@@ -1,17 +1,75 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:online_shop/widgets/home_app_bar.dart';
+import 'package:provider/provider.dart';
 
 import '../providers/product.dart';
+import '../providers/user.dart';
 
-class ProductDetailScreen extends StatelessWidget {
+class ProductDetailScreen extends StatefulWidget {
   const ProductDetailScreen({super.key});
 
   static const routeName = '/product-detail';
 
   @override
+  State<ProductDetailScreen> createState() => _ProductDetailScreenState();
+}
+
+class _ProductDetailScreenState extends State<ProductDetailScreen> {
+  final _form = GlobalKey<FormState>();
+
+  double _rating = 0.0;
+  String _idProd = "";
+  String _idUser = "";
+
+  Future<void> _submitRating() async {
+    final isLogged = Provider.of<User>(context, listen: false).isAuth;
+    if (!isLogged) {
+      await showDialog<void>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          content: const Text('Va rugam sa va logati inainte de a da review'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(ctx).pop();
+              },
+              child: const Text('Okay'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
+    _form.currentState?.save();
+
+    try {
+      await Provider.of<User>(context, listen: false)
+          .rating(_rating, _idProd, _idUser);
+    } catch (error) {
+      await showDialog<void>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('An error occured!'),
+          content: const Text('Something went wrong.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(ctx).pop();
+              },
+              child: const Text('Okay'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final product = ModalRoute.of(context)!.settings.arguments as Product;
+    final email = Provider.of<User>(context, listen: false).getEmail;
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
@@ -37,7 +95,7 @@ class ProductDetailScreen extends StatelessWidget {
                   width: 300,
                   height: 400,
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 30),
                 const Text(
                   'Descriere:',
                   style: TextStyle(
@@ -59,18 +117,62 @@ class ProductDetailScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 15),
-                const RatingBarList(),
-                const SizedBox(
-                  height: 20,
-                ),
-                ElevatedButton(
-                    onPressed: () {},
-                    child: const Text(
-                      'Submit',
-                      style: TextStyle(
-                        fontSize: 20,
+                Form(
+                  key: _form,
+                  child: Column(
+                    children: [
+                      RatingBar.builder(
+                        initialRating: _rating,
+                        itemBuilder: (context, _) => Icon(
+                          Icons.star,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        onRatingUpdate: (rating) => {
+                          setState(() => {
+                                _rating = rating,
+                                _idProd = product.id,
+                                _idUser = email,
+                                print(_rating),
+                                print(_idProd),
+                                print(_idUser),
+                              })
+                        },
                       ),
-                    )),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      ElevatedButton(
+                          onPressed: () {
+                            if (_form.currentState!.validate() &&
+                                _rating != 0) {
+                              _submitRating();
+                            } else {
+                              setState(() {
+                                print('in set state');
+                                const SizedBox(height: 10);
+                                const Text(
+                                  'Va rugam lasati un review',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.red,
+                                  ),
+                                );
+                                const SizedBox(height: 10);
+                              });
+                            }
+                          },
+                          child: const Text(
+                            'Submit',
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),
+                          )),
+                      const SizedBox(
+                        height: 40,
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
             Column(
@@ -126,72 +228,72 @@ class ProductDetailScreen extends StatelessWidget {
   }
 }
 
-class RatingBarList extends StatefulWidget {
-  const RatingBarList({super.key});
+// class RatingBarList extends StatefulWidget {
+//   const RatingBarList({super.key});
 
-  @override
-  State<RatingBarList> createState() => _RatingState();
-}
+//   @override
+//   State<RatingBarList> createState() => _RatingState();
+// }
 
-class _RatingState extends State<RatingBarList> {
-  double rating = 0;
+// class _RatingState extends State<RatingBarList> {
+//   double rating = 0;
 
-  void showRating() => showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: const [
-              Center(
-                child: Text(
-                  'Va rugam sa lasati un rating acestui produs',
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
-                ),
-              )
-            ],
-          ),
-          actions: [
-            Center(child: buildRating()),
-            const SizedBox(height: 5),
-            Center(
-              child: TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text(
-                  'Ok',
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
+//   void showRating() => showDialog(
+//         context: context,
+//         builder: (context) => AlertDialog(
+//           content: Column(
+//             crossAxisAlignment: CrossAxisAlignment.center,
+//             mainAxisSize: MainAxisSize.min,
+//             children: const [
+//               Center(
+//                 child: Text(
+//                   'Va rugam sa lasati un rating acestui produs',
+//                   style: TextStyle(
+//                     fontSize: 20,
+//                   ),
+//                 ),
+//               )
+//             ],
+//           ),
+//           actions: [
+//             Center(child: buildRating()),
+//             const SizedBox(height: 5),
+//             Center(
+//               child: TextButton(
+//                 onPressed: () => Navigator.of(context).pop(),
+//                 child: const Text(
+//                   'Ok',
+//                   style: TextStyle(
+//                     fontSize: 20,
+//                   ),
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//       );
 
-  Widget buildRating() => RatingBar.builder(
-        initialRating: rating,
-        itemBuilder: (context, _) => Icon(
-          Icons.star,
-          color: Theme.of(context).colorScheme.primary,
-        ),
-        onRatingUpdate: (rating) => {
-          setState(() => {
-                this.rating = rating,
-              })
-        },
-      );
+//   Widget buildRating() => RatingBar.builder(
+//         initialRating: rating,
+//         itemBuilder: (context, _) => Icon(
+//           Icons.star,
+//           color: Theme.of(context).colorScheme.primary,
+//         ),
+//         onRatingUpdate: (rating) => {
+//           setState(() => {
+//                 this.rating = rating,
+//               })
+//         },
+//       );
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Center(
-          child: buildRating(),
-        ),
-      ],
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       children: [
+//         Center(
+//           child: buildRating(),
+//         ),
+//       ],
+//     );
+//   }
+// }
