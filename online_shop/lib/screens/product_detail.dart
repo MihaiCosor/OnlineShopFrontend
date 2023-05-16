@@ -22,6 +22,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   String _idProd = "";
   String _idUser = "";
 
+  bool submitError = false;
+
   Future<void> _submitRating() async {
     final isLogged = Provider.of<User>(context, listen: false).isAuth;
     if (!isLogged) {
@@ -69,7 +71,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final product = ModalRoute.of(context)!.settings.arguments as Product;
-    final email = Provider.of<User>(context, listen: false).getEmail;
+    final idUser = Provider.of<User>(context, listen: false).id;
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
@@ -83,26 +85,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 10),
-                Text(
-                  product.title,
-                  style: const TextStyle(
-                    fontSize: 30,
-                  ),
-                ),
-                const SizedBox(height: 20),
                 Image.network(
                   product.imageUrl,
                   width: 300,
                   height: 400,
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 15),
                 const Text(
                   'Descriere:',
                   style: TextStyle(
                     fontSize: 15,
                   ),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
                 Text(
                   product.description,
                   style: const TextStyle(
@@ -112,7 +107,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 const SizedBox(height: 30),
                 const Center(
                   child: Text(
-                    'Review-ul tau',
+                    'Review-ul tau:',
                     style: TextStyle(fontSize: 20),
                   ),
                 ),
@@ -129,9 +124,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         ),
                         onRatingUpdate: (rating) => {
                           setState(() => {
+                            submitError = false,
                                 _rating = rating,
                                 _idProd = product.id,
-                                _idUser = email,
+                                _idUser = idUser,
                                 print(_rating),
                                 print(_idProd),
                                 print(_idUser),
@@ -148,16 +144,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               _submitRating();
                             } else {
                               setState(() {
-                                print('in set state');
-                                const SizedBox(height: 10);
-                                const Text(
-                                  'Va rugam lasati un review',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.red,
-                                  ),
-                                );
-                                const SizedBox(height: 10);
+                                submitError = true;
                               });
                             }
                           },
@@ -167,9 +154,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               fontSize: 20,
                             ),
                           )),
-                      const SizedBox(
-                        height: 40,
-                      ),
+                      SizedBox(height: 0.01 * height),
+                      submitError
+                          ? const Text(
+                              'Va rugam sa introduceti un numar de review-uri!',
+                              style: TextStyle(
+                                color: Colors.red,
+                              ),
+                            )
+                          : const SizedBox(
+                              height: 0,
+                            ),
                     ],
                   ),
                 ),
@@ -177,6 +172,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ),
             Column(
               children: [
+                Text(
+                  product.title,
+                  style: const TextStyle(
+                    fontSize: 30,
+                  ),
+                ),
+                const SizedBox(height: 20),
                 Text(
                   '${product.price} lei',
                   style: const TextStyle(

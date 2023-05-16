@@ -10,9 +10,9 @@ import './product.dart';
 import './cart.dart';
 
 class User with ChangeNotifier {
-  String _id = '';
   final Storage _localStorage = window.localStorage;
 
+  String _id = 'aaa';
   String _name = '';
   String _surname = '';
   String _email = '';
@@ -22,8 +22,8 @@ class User with ChangeNotifier {
 
   String? _token = '';
 
-  String get getEmail {
-    return _email;
+  String get id {
+    return _id;
   }
 
   Map<String, CartProduct> _cartItems = {};
@@ -149,7 +149,7 @@ class User with ChangeNotifier {
   }
 
   Future<void> rating(double rating, String idProd, String idUser) async {
-    final url = Uri.parse('http://localhost:8080/rating');
+    final url = Uri.parse('http://localhost:8080/api/review');
     print('In rating');
     print(rating);
     print(idProd);
@@ -169,7 +169,6 @@ class User with ChangeNotifier {
       );
 
       final responseData = json.decode(response.body);
-      print(responseData.toString());
 
       if (responseData['error'] != null) {
         throw HttpException(responseData['error']['message']);

@@ -20,14 +20,17 @@ class SubFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        const SizedBox(
-          width: 50,
+        SizedBox(
+          width: 0.0325 * width,
         ),
         IconButton(
-          iconSize: 20,
+          iconSize: 0.026 * height,
           icon: Icon(
             _isChecked
                 ? Icons.check_box_outlined

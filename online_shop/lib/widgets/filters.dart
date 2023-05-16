@@ -81,35 +81,37 @@ class _FiltersState extends State<Filters> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
 
     return Container(
+      height: 0.95 * height,
       width: 0.15 * width,
       color: Theme.of(context).colorScheme.background,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
-            padding: const EdgeInsets.only(
-              left: 20,
-              right: 10,
+            padding: EdgeInsets.only(
+              left: 0.013 * width,
+              right: 0.0065 * width,
             ),
             child: Container(
               decoration: BoxDecoration(
                 border: Border.all(
                   color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
-                  width: 1,
+                  width: 0.00065 * width,
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Text('Pret'),
+                  Padding(
+                    padding: EdgeInsets.only(top: 0.013 * height),
+                    child: const Text('Pret'),
                   ),
-                  const SizedBox(
-                    height: 10,
+                  SizedBox(
+                    height: 0.013 * height,
                   ),
                   ...prices.map((price) {
                     return SubFilter(
@@ -124,28 +126,28 @@ class _FiltersState extends State<Filters> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(
-              top: 20,
-              left: 20,
-              right: 10,
+            padding: EdgeInsets.only(
+              top: 0.026 * height,
+              left: 0.013 * width,
+              right: 0.0065 * width,
             ),
             child: Container(
               decoration: BoxDecoration(
                 border: Border.all(
                   color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
-                  width: 1,
+                  width: 0.00065 * width,
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Text('Rating'),
+                  Padding(
+                    padding: EdgeInsets.only(top: 0.013 * height),
+                    child: const Text('Rating'),
                   ),
-                  const SizedBox(
-                    height: 10,
+                  SizedBox(
+                    height: 0.013 * height,
                   ),
                   ...ratings.map((rating) {
                     return SubFilter(
@@ -161,28 +163,28 @@ class _FiltersState extends State<Filters> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(
-              top: 20,
-              left: 20,
-              right: 10,
+            padding: EdgeInsets.only(
+              top: 0.026 * height,
+              left: 0.013 * width,
+              right: 0.0065 * width,
             ),
             child: Container(
               decoration: BoxDecoration(
                 border: Border.all(
                   color: Theme.of(context).colorScheme.surface.withOpacity(0.5),
-                  width: 1,
+                  width: 0.00065 * width,
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Text('Numar de recenzii'),
+                  Padding(
+                    padding: EdgeInsets.only(top: 0.013 * height),
+                    child: const Text('Numar de recenzii'),
                   ),
-                  const SizedBox(
-                    height: 10,
+                  SizedBox(
+                    height: 0.013 * height,
                   ),
                   ...numberOfReviews.map((rating) {
                     return SubFilter(

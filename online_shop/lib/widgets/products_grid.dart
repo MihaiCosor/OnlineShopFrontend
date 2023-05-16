@@ -80,19 +80,21 @@ class ProductsGrid extends StatelessWidget {
     products = productsData.sortItems(products);
 
     double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    print(0.00975 * width);
 
     return Container(
       width: 0.85 * width,
       color: Theme.of(context).colorScheme.background,
       child: GridView.builder(
-        padding: const EdgeInsets.all(10),
+        padding: EdgeInsets.all(0.0065 * width),
         itemCount: products.length,
         itemBuilder: (ctx, index) => ProductItem(product: products[index]),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 5,
           childAspectRatio: 0.9,
-          crossAxisSpacing: 15,
-          mainAxisSpacing: 15,
+          crossAxisSpacing: 0.00975 * width,
+          mainAxisSpacing: 0.0195 * height,
         ),
       ),
     );
