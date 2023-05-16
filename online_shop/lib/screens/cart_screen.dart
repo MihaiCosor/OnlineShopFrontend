@@ -19,7 +19,7 @@ class CartScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Your Cart'),
+        title: const Text('Cosul meu'),
       ),
       body: Column(
         children: [
@@ -54,7 +54,7 @@ class CartScreen extends StatelessWidget {
           const SizedBox(height: 10),
           Expanded(
             child: ListView.builder(
-              itemCount: cart.itemCount,
+              itemCount: cart.singleItemCount,
               itemBuilder: (ctx, index) => CartItem(
                 id: cart.items.values.toList()[index].id,
                 productId: cart.items.keys.toList()[index],

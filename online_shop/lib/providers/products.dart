@@ -188,12 +188,12 @@ class Products with ChangeNotifier {
     return _items.firstWhere((product) => product.id == id);
   }
 
-  set setSortOption(String sortOption) {
+  set sortOption(String sortOption) {
     _sortOption = sortOption;
     notifyListeners();
   }
 
-  set setSearchQuery(String searchQuery) {
+  set searchQuery(String searchQuery) {
     _searchQuery = searchQuery;
     notifyListeners();
   }

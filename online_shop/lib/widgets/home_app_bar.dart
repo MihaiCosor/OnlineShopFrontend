@@ -7,7 +7,7 @@ import '../providers/cart.dart';
 import '../providers/products.dart';
 import '../screens/cart_screen.dart';
 import '../screens/orders_screen.dart';
-import '../screens/settings_screen.dart';
+import '../screens/profile_screen.dart';
 import './my_badge.dart';
 
 class HomeAppBar extends StatefulWidget with PreferredSizeWidget {
@@ -24,7 +24,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
   final _form = GlobalKey<FormState>();
 
   var _isLoading = false;
-  var _isAuthPopup = false;
+  var _isAuthPopup = true;
 
   String _name = "";
   String _surname = "";
@@ -51,7 +51,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
   }
 
   _onSearchInputChange() {
-    Provider.of<Products>(context, listen: false).setSearchQuery =
+    Provider.of<Products>(context, listen: false).searchQuery =
         _searchController.text;
   }
 
@@ -94,7 +94,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
   _setSortOption(String sortOption) {
     setState(() {
       _sortOption = sortOption;
-      Provider.of<Products>(context, listen: false).setSortOption = sortOption;
+      Provider.of<Products>(context, listen: false).sortOption = sortOption;
     });
   }
 
@@ -290,7 +290,6 @@ class _HomeAppBarState extends State<HomeAppBar> {
             Navigator.of(context).pushNamed(CartScreen.routeName);
           },
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               const SizedBox(
                 width: 5,
@@ -328,72 +327,36 @@ class _HomeAppBarState extends State<HomeAppBar> {
           ),
         ),
         isAuth
-            ? Theme(
-                data: Theme.of(context).copyWith(
-                  hoverColor: Colors.transparent,
-                  splashColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                ),
-                child: PopupMenuButton(
-                  tooltip: "",
-                  onSelected: (selectedValue) {
-                    switch (selectedValue) {
-                      case 0:
-                        Navigator.of(context).pushNamed(OrdersScreen.routeName);
-                        break;
-                      case 1:
-                        Navigator.of(context)
-                            .pushNamed(SettingsScreen.routeName);
-                        break;
-                      default:
-                    }
-                  },
-                  itemBuilder: (_) => [
-                    const PopupMenuItem(
-                      value: 0,
-                      child: Text('Comenzi'),
+            ? TextButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(ProfileScreen.routeName);
+                },
+                child: Row(
+                  children: [
+                    const SizedBox(
+                      width: 10,
                     ),
-                    const PopupMenuItem(
-                      value: 1,
-                      child: Text('Setari'),
+                    Icon(
+                      Icons.person_outline,
+                      size: 30,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      'Contul meu',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.surface,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(
+                      width: 10,
                     ),
                   ],
-                  position: PopupMenuPosition.under,
-                  child: Row(
-                    children: [
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Icon(
-                        Icons.person_outline,
-                        size: 30,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        'Contul meu',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.surface,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Icon(
-                        Icons.arrow_drop_down_outlined,
-                        size: 30,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                    ],
-                  ),
                 ),
               )
             : TextButton(

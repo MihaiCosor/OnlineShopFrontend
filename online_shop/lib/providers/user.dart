@@ -1,36 +1,60 @@
 import 'dart:convert';
+import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/http_exception.dart';
-import 'product.dart';
+import './product.dart';
+import './cart.dart';
 
 class User with ChangeNotifier {
   String _id = '';
+  final Storage _localStorage = window.localStorage;
+
   String _name = '';
   String _surname = '';
   String _email = '';
 
   bool _isAdmin = false;
-  bool _isLogged = false;
+  bool _isLogged = true;
 
-  String _token = '';
-  DateTime _expiryDate = DateTime.now();
+  String? _token = '';
 
   String get getEmail {
     return _email;
   }
 
+  Map<String, CartProduct> _cartItems = {};
   List<Product> _favoriteItems = [];
-  //TODO: list de recenzii
+
+  String get name {
+    return _name;
+  }
+
+  String get surname {
+    return _surname;
+  }
+
+  String get email {
+    return _email;
+  }
+
+  Map<String, CartProduct> get cartItems {
+    return {..._cartItems};
+  }
 
   List<Product> get favoriteItems {
     return [..._favoriteItems];
   }
 
   bool get isAuth {
-    //return _expiryDate.isAfter(DateTime.now());
+    // if (_token == null) {
+    //   return false;
+    // } else {
+    //   return JwtDecoder.isExpired(_token!);
+    // }
     return _isLogged;
   }
 
@@ -38,13 +62,16 @@ class User with ChangeNotifier {
     return _isAdmin;
   }
 
-  set setIsAdmin(bool value) {
-    _isAdmin = value;
-    notifyListeners();
-  }
+  logout() {
+    _name = '';
+    _surname = '';
+    _email = '';
+    _isAdmin = false;
+    _isLogged = false;
+    _token = null;
+    _favoriteItems = [];
 
-  set setIsLogged(bool value) {
-    _isLogged = value;
+    _isLogged = false;
     notifyListeners();
   }
 
@@ -75,15 +102,7 @@ class User with ChangeNotifier {
       _email = responseData['email'];
       _isAdmin = responseData['isAdmin'];
       _token = responseData['token'];
-      _expiryDate = DateTime.now().add(
-        Duration(
-          seconds: int.parse(responseData['expiresIn']),
-        ),
-      );
-
-      if (_expiryDate.isAfter(DateTime.now())) {
-        print("LOGARE CU SUCCES");
-      }
+      _cartItems = responseData['cart'];
 
       notifyListeners();
     } catch (error) {
@@ -121,15 +140,7 @@ class User with ChangeNotifier {
       _email = responseData['email'];
       _isAdmin = responseData['isAdmin'];
       _token = responseData['token'];
-      _expiryDate = DateTime.now().add(
-        Duration(
-          seconds: int.parse(responseData['expiresIn']),
-        ),
-      );
-
-      if (_expiryDate.isAfter(DateTime.now())) {
-        print("INREGISTRE CU SUCCES");
-      }
+      _cartItems = responseData['cart'];
 
       notifyListeners();
     } catch (error) {
