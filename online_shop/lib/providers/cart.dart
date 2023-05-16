@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import './user.dart';
+
 class CartProduct {
   final String id;
   final String title;
@@ -21,7 +23,17 @@ class Cart with ChangeNotifier {
     return {..._items};
   }
 
+  set items(Map<String, CartProduct> items) {
+    _items = items;
+  }
+
   int get itemCount {
+    return _items.values
+        .map((value) => value.quantity)
+        .fold(0, (sum, val) => sum + val);
+  }
+
+  int get singleItemCount {
     return _items.length;
   }
 
@@ -55,6 +67,8 @@ class Cart with ChangeNotifier {
               ));
     }
 
+    //TODO: send request
+
     notifyListeners();
   }
 
@@ -63,7 +77,7 @@ class Cart with ChangeNotifier {
     notifyListeners();
   }
 
-  void removeSingeItem(String productId) {
+  void removeSingleItem(String productId) {
     if (!_items.containsKey(productId)) {
       return;
     }

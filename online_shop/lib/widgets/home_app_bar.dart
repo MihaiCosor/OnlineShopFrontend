@@ -51,7 +51,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
   }
 
   _onSearchInputChange() {
-    Provider.of<Products>(context, listen: false).setSearchQuery =
+    Provider.of<Products>(context, listen: false).searchQuery =
         _searchController.text;
   }
 
@@ -94,7 +94,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
   _setSortOption(String sortOption) {
     setState(() {
       _sortOption = sortOption;
-      Provider.of<Products>(context, listen: false).setSortOption = sortOption;
+      Provider.of<Products>(context, listen: false).sortOption = sortOption;
     });
   }
 
