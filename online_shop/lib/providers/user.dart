@@ -76,7 +76,7 @@ class User with ChangeNotifier {
   }
 
   Future<void> login(String email, String password) async {
-    final url = Uri.parse('http://localhost:8080/login');
+    final url = Uri.parse('http://localhost:8080/api/login');
 
     try {
       final response = await http.post(
@@ -112,7 +112,7 @@ class User with ChangeNotifier {
 
   Future<void> register(
       String name, String surname, String email, String password) async {
-    final url = Uri.parse('http://localhost:8080/register');
+    final url = Uri.parse('http://localhost:8080/api/register');
 
     try {
       final response = await http.post(

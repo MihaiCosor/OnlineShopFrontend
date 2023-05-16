@@ -39,7 +39,7 @@ class CartScreen extends StatelessWidget {
                   const Spacer(),
                   Chip(
                     label: Text(
-                      '\$${cart.totalAmount.toStringAsFixed(2)}',
+                      '${cart.totalAmount.toStringAsFixed(2)} lei',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.surface,
                       ),
@@ -112,7 +112,7 @@ class _OrderButtonState extends State<OrderButton> {
       ),
       child: _isLoading
           ? const CircularProgressIndicator()
-          : const Text('ORDER NOW'),
+          : const Text('COMANDA ACUM'),
     );
   }
 }
