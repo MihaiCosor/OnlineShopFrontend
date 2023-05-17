@@ -81,7 +81,6 @@ class ProductsGrid extends StatelessWidget {
 
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    print(0.00975 * width);
 
     return Container(
       width: 0.85 * width,

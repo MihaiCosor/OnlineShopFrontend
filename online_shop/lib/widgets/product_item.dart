@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import '../providers/user.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/product.dart';
@@ -18,10 +19,60 @@ class ProductItem extends StatefulWidget {
 
 class _ProductItemState extends State<ProductItem> {
   bool isHovering = false;
+  final _form = GlobalKey<FormState>();
+
+  String _idProd = "";
+  String _idUser = "";
+
+  Future<void> _submitFavorite() async {
+    final isLogged = Provider.of<User>(context, listen: false).isAuth;
+    if (!isLogged) {
+      await showDialog<void>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          content: const Text(
+              'Va rugam sa va logati inainte de a selecta un produs favorit'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(ctx).pop();
+              },
+              child: const Text('Okay'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
+    _form.currentState?.save();
+
+    try {
+      await Provider.of<User>(context, listen: false)
+          .favorite(_idProd, _idUser);
+    } catch (error) {
+      await showDialog<void>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('An error occured!'),
+          content: const Text('Something went wrong.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(ctx).pop();
+              },
+              child: const Text('Okay'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<Cart>(context, listen: false);
+    final idUser = Provider.of<User>(context, listen: false).id;
 
     Timer timer;
     bool isSnackbarTapped = false;
@@ -76,7 +127,16 @@ class _ProductItemState extends State<ProductItem> {
                           : Icons.favorite_outline_outlined,
                     ),
                     onPressed: () {
-                      widget.product.toggleFavoriteStatus();
+                      Provider.of<User>(context, listen: false).isAuth
+                          ? widget.product.toggleFavoriteStatus()
+                          : const SizedBox(
+                              height: 0,
+                            );
+                      _idProd = widget.product.id;
+                      _idUser = idUser;
+                      _submitFavorite();
+                      print(_idProd);
+                      print(_idUser);
                     },
                     color: Colors.red,
                   ),

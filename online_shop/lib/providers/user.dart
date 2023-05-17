@@ -150,10 +150,6 @@ class User with ChangeNotifier {
 
   Future<void> rating(double rating, String idProd, String idUser) async {
     final url = Uri.parse('http://localhost:8080/api/review');
-    print('In rating');
-    print(rating);
-    print(idProd);
-    print(idUser);
 
     try {
       final response = await http.post(
@@ -163,6 +159,33 @@ class User with ChangeNotifier {
         },
         body: json.encode({
           'rating': rating,
+          'idProd': idProd,
+          'idUser': idUser,
+        }),
+      );
+
+      final responseData = json.decode(response.body);
+
+      if (responseData['error'] != null) {
+        throw HttpException(responseData['error']['message']);
+      }
+
+      notifyListeners();
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  Future<void> favorite(String idProd, String idUser) async {
+    final url = Uri.parse('http://localhost:8080/api/favorite');
+
+    try {
+      final response = await http.post(
+        url,
+        headers: <String, String>{
+          "Content-Type": "application/json; charset=UTF-8"
+        },
+        body: json.encode({
           'idProd': idProd,
           'idUser': idUser,
         }),
