@@ -33,12 +33,12 @@ class CartItem extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(5),
               child: FittedBox(
-                child: Text('\$$price'),
+                child: Text('$price lei'),
               ),
             ),
           ),
           title: Text(title),
-          subtitle: Text('Total: \$${price * quantity}'),
+          subtitle: Text('Total: ${price * quantity} lei'),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [

@@ -32,7 +32,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Your Orders'),
+        title: const Text('Comenzile mele'),
       ),
       body: FutureBuilder(
         future: _ordersFuture,
