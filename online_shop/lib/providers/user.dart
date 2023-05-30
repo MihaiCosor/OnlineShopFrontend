@@ -1,13 +1,18 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:html';
 
 import 'package:flutter/material.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
+// import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/http_exception.dart';
 import './product.dart';
 import './cart.dart';
+
+class Cartt {
+  HashMap<String, CartProduct> cartProducts = HashMap<String, CartProduct>();
+}
 
 class User with ChangeNotifier {
   final Storage _localStorage = window.localStorage;
@@ -18,7 +23,7 @@ class User with ChangeNotifier {
   String _email = '';
 
   bool _isAdmin = false;
-  bool _isLogged = true;
+  bool _isLogged = false;
 
   String? _token = '';
 
@@ -76,8 +81,8 @@ class User with ChangeNotifier {
   }
 
   Future<void> login(String email, String password) async {
-    final url = Uri.parse('http://localhost:8080/api/login');
-
+    final url = Uri.parse('http://localhost:8080/api/auth/login');
+    print("tesssssssssssssssssssssssssst");
     try {
       final response = await http.post(
         url,
@@ -90,19 +95,29 @@ class User with ChangeNotifier {
         }),
       );
 
+      print("aici");
       final responseData = json.decode(response.body);
-
+      print("dupa");
       if (responseData['error'] != null) {
         throw HttpException(responseData['error']['message']);
       }
+      print("final");
 
+      print(responseData);
+      print(responseData['id']);
+      print("aaasdasd");
       _id = responseData['id'];
       _name = responseData['name'];
       _surname = responseData['surname'];
       _email = responseData['email'];
-      _isAdmin = responseData['isAdmin'];
-      _token = responseData['token'];
-      _cartItems = responseData['cart'];
+      // _isAdmin = responseData['isAdmin'];
+      // _token = responseData['token'];
+      // Cartt aux = responseData['cart'];
+      print("cecszzd");
+      // _cartItems = aux.cartProducts;
+      _isLogged = true;
+      print(_isLogged);
+      print(_name);
 
       notifyListeners();
     } catch (error) {
@@ -112,7 +127,7 @@ class User with ChangeNotifier {
 
   Future<void> register(
       String name, String surname, String email, String password) async {
-    final url = Uri.parse('http://localhost:8080/api/register');
+    final url = Uri.parse('http://localhost:8080/api/auth/register');
 
     try {
       final response = await http.post(
@@ -134,13 +149,22 @@ class User with ChangeNotifier {
         throw HttpException(responseData['error']['message']);
       }
 
+      print(responseData);
       _id = responseData['id'];
       _name = responseData['name'];
       _surname = responseData['surname'];
       _email = responseData['email'];
-      _isAdmin = responseData['isAdmin'];
-      _token = responseData['token'];
-      _cartItems = responseData['cart'];
+      //_isAdmin = responseData['isAdmin'];
+      // _token = responseData['token'];
+      print(_name);
+      // Cartt aux = responseData['cart'];
+      print("cecszzd");
+      //  _cartItems = aux.cartProducts;
+      _isLogged = true;
+      print(_isLogged);
+      print(_name);
+
+      _isLogged = true;
 
       notifyListeners();
     } catch (error) {

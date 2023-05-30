@@ -1,0 +1,37 @@
+Index: online_shop/lib/providers/user.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import 'dart:convert';\r\n\r\nimport 'package:flutter/material.dart';\r\nimport 'package:http/http.dart' as http;\r\n\r\nimport '../models/http_exception.dart';\r\nimport 'product.dart';\r\n\r\nclass User with ChangeNotifier {\r\n  String _name = '';\r\n  String _surname = '';\r\n  String _email = '';\r\n\r\n  bool _isAdmin = false;\r\n\r\n  String _token = '';\r\n  DateTime _expiryDate = DateTime.now();\r\n\r\n  List<Product> _favoriteItems = [];\r\n  //TODO: list de recenzii\r\n\r\n  List<Product> get favoriteItems {\r\n    return [..._favoriteItems];\r\n  }\r\n\r\n  bool get isAuth {\r\n    //return _expiryDate.isAfter(DateTime.now());\r\n    return true;\r\n  }\r\n\r\n  bool get isAdmin {\r\n    return _isAdmin;\r\n  }\r\n\r\n  Future<void> login(String email, String password) async {\r\n    final url = Uri.parse('http://localhost:8080/login');\r\n\r\n    try {\r\n      final response = await http.post(\r\n        url,\r\n        headers: <String, String>{\r\n          \"Content-Type\": \"application/json; charset=UTF-8\"\r\n        },\r\n        body: json.encode({\r\n          'email': email,\r\n          'password': password,\r\n        }),\r\n      );\r\n\r\n      final responseData = json.decode(response.body);\r\n\r\n      if (responseData['error'] != null) {\r\n        throw HttpException(responseData['error']['message']);\r\n      }\r\n\r\n      _name = responseData['name'];\r\n      _surname = responseData['surname'];\r\n      _email = responseData['email'];\r\n      _isAdmin = responseData['isAdmin'];\r\n      _token = responseData['token'];\r\n      _expiryDate = DateTime.now().add(\r\n        Duration(\r\n          seconds: int.parse(responseData['expiresIn']),\r\n        ),\r\n      );\r\n\r\n      if (_expiryDate.isAfter(DateTime.now())) {\r\n        print(\"LOGARE CU SUCCES\");\r\n      }\r\n\r\n      notifyListeners();\r\n    } catch (error) {\r\n      rethrow;\r\n    }\r\n  }\r\n\r\n  Future<void> register(\r\n      String name, String surname, String email, String password) async {\r\n    final url = Uri.parse('http://localhost:8080/register');\r\n\r\n    try {\r\n      final response = await http.post(\r\n        url,\r\n        headers: <String, String>{\r\n          \"Content-Type\": \"application/json; charset=UTF-8\"\r\n        },\r\n        body: json.encode({\r\n          'name': name,\r\n          'surname': surname,\r\n          'email': email,\r\n          'password': password,\r\n        }),\r\n      );\r\n\r\n      final responseData = json.decode(response.body);\r\n\r\n      if (responseData['error'] != null) {\r\n        throw HttpException(responseData['error']['message']);\r\n      }\r\n\r\n      _name = responseData['name'];\r\n      _surname = responseData['surname'];\r\n      _email = responseData['email'];\r\n      _isAdmin = responseData['isAdmin'];\r\n      _token = responseData['token'];\r\n      _expiryDate = DateTime.now().add(\r\n        Duration(\r\n          seconds: int.parse(responseData['expiresIn']),\r\n        ),\r\n      );\r\n\r\n      if (_expiryDate.isAfter(DateTime.now())) {\r\n        print(\"INREGISTRE CU SUCCES\");\r\n      }\r\n\r\n      notifyListeners();\r\n    } catch (error) {\r\n      rethrow;\r\n    }\r\n  }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/online_shop/lib/providers/user.dart b/online_shop/lib/providers/user.dart
+--- a/online_shop/lib/providers/user.dart	(revision 9a3067620bdf8adb834e15bc23f9180e3a6838a4)
++++ b/online_shop/lib/providers/user.dart	(date 1683987900766)
+@@ -11,7 +11,7 @@
+   String _surname = '';
+   String _email = '';
+ 
+-  bool _isAdmin = false;
++  bool _isAdmin = true;
+ 
+   String _token = '';
+   DateTime _expiryDate = DateTime.now();
+@@ -33,7 +33,7 @@
+   }
+ 
+   Future<void> login(String email, String password) async {
+-    final url = Uri.parse('http://localhost:8080/login');
++    final url = Uri.parse('http://localhost:8080/api/auth/login');
+ 
+     try {
+       final response = await http.post(
+@@ -76,7 +76,7 @@
+ 
+   Future<void> register(
+       String name, String surname, String email, String password) async {
+-    final url = Uri.parse('http://localhost:8080/register');
++    final url = Uri.parse('http://localhost:8080/api/auth/register');
+ 
+     try {
+       final response = await http.post(

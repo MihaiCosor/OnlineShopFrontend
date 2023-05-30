@@ -1,4 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../models/http_exception.dart';
+import 'package:http/http.dart' as http;
 
 import './user.dart';
 
@@ -46,7 +52,7 @@ class Cart with ChangeNotifier {
     return total;
   }
 
-  void addItem(String productId, double price, String title) {
+  Future<void> addItem(String productId, double price, String title, String userId) async {
     if (_items.containsKey(productId)) {
       _items.update(
           productId,
@@ -68,6 +74,30 @@ class Cart with ChangeNotifier {
     }
 
     //TODO: send request
+    // final url = Uri.parse('http://localhost:8080/api/cart/add');
+    // print("teeeest");
+    // try {
+    //   final response = await http.post(
+    //     url,
+    //     headers: <String, String>{
+    //       "Content-Type": "application/json; charset=UTF-8"
+    //     },
+    //     body: json.encode({
+    //       'userId': userId,
+    //       'productId': productId,
+    //       'quantity': 1,
+    //     }),
+    //   );
+
+    //   print("send");
+    //   final responseData = json.decode(response.body);
+    //   print(responseData.toString() + "response");
+    //   if (responseData['error'] != null) {
+    //     throw HttpException(responseData['error']['message']);
+    //   }
+    // } catch (error) {
+    //   rethrow;
+    // }
 
     notifyListeners();
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/cart.dart';
+import '../providers/user.dart';
 
 class CartItem extends StatelessWidget {
   final String id;
@@ -92,7 +93,7 @@ class CartItem extends StatelessWidget {
                 child: FloatingActionButton(
                   onPressed: () {
                     Provider.of<Cart>(context, listen: false)
-                        .addItem(productId, price, title);
+                        .addItem(productId, price, title, Provider.of<User>(context, listen: false).id);
                   },
                   backgroundColor: Theme.of(context).colorScheme.background,
                   child: const Icon(

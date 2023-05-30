@@ -198,7 +198,7 @@ class _ProductItemState extends State<ProductItem> {
                     hoverColor: Colors.transparent,
                     onPressed: () {
                       cart.addItem(widget.product.id, widget.product.price,
-                          widget.product.title);
+                          widget.product.title, Provider.of<User>(context, listen: false).id);
                       if (!isSnackbarTapped) {
                         isSnackbarTapped = true;
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
