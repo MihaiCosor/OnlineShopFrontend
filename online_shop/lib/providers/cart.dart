@@ -25,6 +25,10 @@ class CartProduct {
 class Cart with ChangeNotifier {
   Map<String, CartProduct> _items = {};
 
+  Cart(Map<String, CartProduct> items) {
+    _items = items;
+  }
+
   Map<String, CartProduct> get items {
     return {..._items};
   }
@@ -52,7 +56,8 @@ class Cart with ChangeNotifier {
     return total;
   }
 
-  Future<void> addItem(String productId, double price, String title, String userId) async {
+  Future<void> addItem(
+      String productId, double price, String title, String userId) async {
     if (_items.containsKey(productId)) {
       _items.update(
           productId,

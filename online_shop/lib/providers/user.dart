@@ -23,7 +23,7 @@ class User with ChangeNotifier {
   String _email = '';
 
   bool _isAdmin = false;
-  bool _isLogged = false;
+  bool _isLogged = true;
 
   String? _token = '';
 
@@ -199,12 +199,9 @@ class User with ChangeNotifier {
         body: json.encode({
           'userId': idUser,
           'productId': idProd,
-          'addRating': rating,          
+          'addRating': rating,
         }),
       );
-
-      
-      
 
       notifyListeners();
     } catch (error) {
