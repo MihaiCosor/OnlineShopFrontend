@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    Map<String, CartProduct> cartItems = {};
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
           create: (_) => Orders(),
         ),
         ChangeNotifierProxyProvider<User, Cart>(
-          create: (_) => Cart(),
+          create: (_) => Cart(cartItems),
           update: (_, User user, Cart? cart) {
             cart!.items = user.cartItems;
             return cart;
