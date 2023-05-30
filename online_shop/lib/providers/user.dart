@@ -184,9 +184,9 @@ class User with ChangeNotifier {
           "Content-Type": "application/json; charset=UTF-8"
         },
         body: json.encode({
-          'rating': rating,
-          'idProd': idProd,
-          'idUser': idUser,
+          'addRating': rating,
+          'productId': idProd,
+          'userId': idUser,
         }),
       );
 
