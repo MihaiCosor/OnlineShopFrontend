@@ -48,8 +48,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
     try {
       await Provider.of<User>(context, listen: false)
-          .rating(_rating, _idProd, _idUser);
+          .rating(_rating.round(), _idProd, _idUser);
     } catch (error) {
+      print(error);
       await showDialog<void>(
         context: context,
         builder: (ctx) => AlertDialog(
@@ -71,7 +72,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final product = ModalRoute.of(context)!.settings.arguments as Product;
-    final idUser = Provider.of<User>(context, listen: false).id;
+    final idUser = Provider.of<User>(context).id;
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 

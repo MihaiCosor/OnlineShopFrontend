@@ -22,6 +22,8 @@ class CartItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final idUser = Provider.of<User>(context).id;
+
     return Card(
       margin: const EdgeInsets.symmetric(
         horizontal: 15,
@@ -64,7 +66,7 @@ class CartItem extends StatelessWidget {
                             TextButton(
                                 onPressed: () {
                                   Provider.of<Cart>(context, listen: false)
-                                      .removeSingleItem(productId);
+                                      .removeSingleItem(productId, idUser);
                                   Navigator.of(ctx).pop(true);
                                 },
                                 child: const Text('Da')),
@@ -73,7 +75,7 @@ class CartItem extends StatelessWidget {
                       );
                     } else {
                       Provider.of<Cart>(context, listen: false)
-                          .removeSingleItem(productId);
+                          .removeSingleItem(productId, idUser);
                     }
                   },
                   backgroundColor: Theme.of(context).colorScheme.background,
@@ -119,7 +121,7 @@ class CartItem extends StatelessWidget {
                         TextButton(
                             onPressed: () {
                               Provider.of<Cart>(context, listen: false)
-                                  .removeItem(productId);
+                                  .removeItem(productId, idUser, quantity);
                               Navigator.of(ctx).pop(true);
                             },
                             child: const Text('Da')),

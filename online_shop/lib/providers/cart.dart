@@ -74,40 +74,60 @@ class Cart with ChangeNotifier {
     }
 
     //TODO: send request
-    // final url = Uri.parse('http://localhost:8080/api/cart/add');
-    // print("teeeest");
-    // try {
-    //   final response = await http.post(
-    //     url,
-    //     headers: <String, String>{
-    //       "Content-Type": "application/json; charset=UTF-8"
-    //     },
-    //     body: json.encode({
-    //       'userId': userId,
-    //       'productId': productId,
-    //       'quantity': 1,
-    //     }),
-    //   );
+    final url = Uri.parse('http://localhost:8080/api/cart/add');
+    print("teeeest");
+    print(userId);
+    print(productId);
+    try {
+      final response = await http.put(
+        url,
+        headers: <String, String>{
+          "Content-Type": "application/json; charset=UTF-8"
+        },
+        body: json.encode({
+          'userId': userId,
+          'productId': productId,
+          'quantity': 1,
+        }),
+      );
 
-    //   print("send");
-    //   final responseData = json.decode(response.body);
-    //   print(responseData.toString() + "response");
-    //   if (responseData['error'] != null) {
-    //     throw HttpException(responseData['error']['message']);
-    //   }
-    // } catch (error) {
-    //   rethrow;
-    // }
+      print("send");
+    } catch (error) {
+      rethrow;
+    }
 
     notifyListeners();
   }
 
-  void removeItem(String productId) {
+  Future<void> removeItem(String productId, String userId, int quantity) async {
     _items.remove(productId);
+
+    final url = Uri.parse('http://localhost:8080/api/cart/remove');
+    print("teeeest");
+    print(userId);
+    print(productId);
+    try {
+      final response = await http.put(
+        url,
+        headers: <String, String>{
+          "Content-Type": "application/json; charset=UTF-8"
+        },
+        body: json.encode({
+          'userId': userId,
+          'productId': productId,
+          'quantity': quantity,
+        }),
+      );
+
+      print("REMOVE ITEM");
+    } catch (error) {
+      rethrow;
+    }
+
     notifyListeners();
   }
 
-  void removeSingleItem(String productId) {
+  Future<void> removeSingleItem(String productId, String userId) async {
     if (!_items.containsKey(productId)) {
       return;
     }
@@ -123,6 +143,28 @@ class Cart with ChangeNotifier {
       );
     } else {
       _items.remove(productId);
+    }
+
+    final url = Uri.parse('http://localhost:8080/api/cart/remove');
+    print("teeeest");
+    print(userId);
+    print(productId);
+    try {
+      final response = await http.put(
+        url,
+        headers: <String, String>{
+          "Content-Type": "application/json; charset=UTF-8"
+        },
+        body: json.encode({
+          'userId': userId,
+          'productId': productId,
+          'quantity': 1,
+        }),
+      );
+
+      print("REMOVE SINGLE");
+    } catch (error) {
+      rethrow;
     }
 
     notifyListeners();

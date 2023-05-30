@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/cart.dart';
 import '../providers/user.dart';
 import '../screens/home_screen.dart';
 import '../screens/profile_screen.dart';
@@ -67,6 +68,7 @@ class _AppDrawerState extends State<AppDrawer> {
     double height = MediaQuery.of(context).size.height;
 
     final user = Provider.of<User>(context);
+    final cart = Provider.of<Cart>(context);
     bool isAuth = user.isAuth;
 
     return Drawer(
@@ -1284,6 +1286,7 @@ class _AppDrawerState extends State<AppDrawer> {
                       );
                     } else {
                       user.logout();
+                      cart.clearCart();
                     }
                   },
                   child: isAuth

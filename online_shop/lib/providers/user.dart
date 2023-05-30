@@ -106,15 +106,25 @@ class User with ChangeNotifier {
       print(responseData);
       print(responseData['id']);
       print("aaasdasd");
-      //_id = responseData['id'];
+      _id = responseData['id'];
       _name = responseData['name'];
       _surname = responseData['surname'];
       _email = responseData['email'];
       // _isAdmin = responseData['isAdmin'];
       // _token = responseData['token'];
+      print(responseData['cart']['cartProducts'].runtimeType);
       // Cartt aux = responseData['cart'];
       print("cecszzd");
-      // _cartItems = aux.cartProducts;
+      Map<String, dynamic> aux = responseData['cart']['cartProducts'];
+      for (var i = 0; i < aux.length; i++) {
+        _cartItems[aux.keys.elementAt(i)] = CartProduct(
+          id: aux.values.elementAt(i)['productId'],
+          title: aux.values.elementAt(i)['title'],
+          quantity: aux.values.elementAt(i)['quantity'],
+          price: aux.values.elementAt(i)['price'],
+        );
+      }
+      //_cartItems = responseData['cart']['cartProducts'];
       _isLogged = true;
       print(_isLogged);
       print(_name);
@@ -174,27 +184,27 @@ class User with ChangeNotifier {
     }
   }
 
-  Future<void> rating(double rating, String idProd, String idUser) async {
+  Future<void> rating(int rating, String idProd, String idUser) async {
     final url = Uri.parse('http://localhost:8080/api/review');
 
     try {
+      print(rating);
+      print(idProd);
+      print(idUser);
       final response = await http.post(
         url,
         headers: <String, String>{
           "Content-Type": "application/json; charset=UTF-8"
         },
         body: json.encode({
-          'addRating': rating,
-          'productId': idProd,
           'userId': idUser,
+          'productId': idProd,
+          'addRating': rating,          
         }),
       );
 
-      final responseData = json.decode(response.body);
-
-      if (responseData['error'] != null) {
-        throw HttpException(responseData['error']['message']);
-      }
+      
+      
 
       notifyListeners();
     } catch (error) {

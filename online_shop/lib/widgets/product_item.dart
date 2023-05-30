@@ -71,8 +71,8 @@ class _ProductItemState extends State<ProductItem> {
 
   @override
   Widget build(BuildContext context) {
-    final cart = Provider.of<Cart>(context, listen: false);
-    final idUser = Provider.of<User>(context, listen: false).id;
+    final cart = Provider.of<Cart>(context);
+    final idUser = Provider.of<User>(context).id;
 
     Timer timer;
     bool isSnackbarTapped = false;
@@ -208,7 +208,7 @@ class _ProductItemState extends State<ProductItem> {
                           action: SnackBarAction(
                             label: 'UNDO',
                             onPressed: () {
-                              cart.removeSingleItem(widget.product.id);
+                              cart.removeSingleItem(widget.product.id, idUser);
                             },
                             textColor: Theme.of(context).colorScheme.surface,
                           ),
