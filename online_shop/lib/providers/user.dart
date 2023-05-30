@@ -106,7 +106,7 @@ class User with ChangeNotifier {
       print(responseData);
       print(responseData['id']);
       print("aaasdasd");
-      _id = responseData['id'];
+      //_id = responseData['id'];
       _name = responseData['name'];
       _surname = responseData['surname'];
       _email = responseData['email'];
@@ -128,6 +128,8 @@ class User with ChangeNotifier {
   Future<void> register(
       String name, String surname, String email, String password) async {
     final url = Uri.parse('http://localhost:8080/api/auth/register');
+
+    print("o luam de la capat");
 
     try {
       final response = await http.post(

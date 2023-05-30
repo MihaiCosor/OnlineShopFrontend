@@ -24,7 +24,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var _isInit = false;
+  var _isInit = true;
   var _isLoading = false;
 
   Map<String, List<String>> _filters = {
