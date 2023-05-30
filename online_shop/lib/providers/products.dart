@@ -202,8 +202,10 @@ class Products with ChangeNotifier {
     final url = Uri.parse('http://localhost:8080/products');
 
     try {
+      print("test");
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as List<dynamic>;
+      print(extractedData);
 
       // if (extractedData == null) {
       //   return;
@@ -219,7 +221,7 @@ class Products with ChangeNotifier {
           isFavorite: false,
           imageUrl: prodData['imageUrl'],
           rating: prodData['rating'],
-          numberOfReviews: prodData['numberOfReviews'],
+          numberOfReviews: prodData['nrReview'],
         ));
       }
 
