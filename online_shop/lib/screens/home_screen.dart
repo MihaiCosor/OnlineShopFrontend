@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:pager/pager.dart';
 
+import '../providers/product.dart';
 import '../providers/products.dart';
 import '../providers/user.dart';
 import '../widgets/home_app_bar.dart';
@@ -24,8 +26,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var _isInit = true;
+  var _isInit = false;
   var _isLoading = false;
+
+  var _page = 1;
 
   Map<String, List<String>> _filters = {
     'price': [],
@@ -63,6 +67,9 @@ class _HomeScreenState extends State<HomeScreen> {
     bool isAuth = user.isAuth;
     bool isAdmin = user.isAdmin;
 
+    final productsData = Provider.of<Products>(context);
+    List<Product> products = productsData.items;
+
     return Scaffold(
       appBar: const HomeAppBar(),
       body: _isLoading
@@ -72,8 +79,34 @@ class _HomeScreenState extends State<HomeScreen> {
           : Row(
               children: [
                 Filters(applyFilters: applyFilters),
-                ProductsGrid(
-                  filters: _filters,
+                Column(
+                  children: [
+                    Expanded(
+                      child: ProductsGrid(
+                        filters: _filters,
+                        page: _page,
+                      ),
+                    ),
+                    Expanded(
+                      flex: FlexFit.tight.index,
+                      child: Pager(
+                        currentPage: _page,
+                        numberButtonSelectedColor: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withOpacity(0.5),
+                        totalPages: (products.length / 10).round() + 1,
+                        onPageChanged: (page) {
+                          setState(() {
+                            _page = page;
+                          });
+                        },
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 50,
+                    ),
+                  ],
                 ),
               ],
             ),

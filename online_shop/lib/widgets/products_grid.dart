@@ -7,9 +7,14 @@ import './product_item.dart';
 
 class ProductsGrid extends StatelessWidget {
   final Map<String, List<String>> _filters;
+  final int _page;
 
-  const ProductsGrid({super.key, required Map<String, List<String>> filters})
-      : _filters = filters;
+  const ProductsGrid(
+      {super.key,
+      required Map<String, List<String>> filters,
+      required int page})
+      : _filters = filters,
+        _page = page;
 
   @override
   Widget build(BuildContext context) {
@@ -87,8 +92,9 @@ class ProductsGrid extends StatelessWidget {
       color: Theme.of(context).colorScheme.background,
       child: GridView.builder(
         padding: EdgeInsets.all(0.0065 * width),
-        itemCount: products.length,
-        itemBuilder: (ctx, index) => ProductItem(product: products[index]),
+        itemCount: _page >= products.length / 10 ? (products.length % 10) : 10,
+        itemBuilder: (ctx, index) =>
+            ProductItem(product: products[10 * (_page - 1) + index]),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 5,
           childAspectRatio: 0.9,
