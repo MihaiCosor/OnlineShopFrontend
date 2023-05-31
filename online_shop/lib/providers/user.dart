@@ -32,7 +32,7 @@ class User with ChangeNotifier {
   }
 
   Map<String, CartProduct> _cartItems = {};
-  List<Product> _favoriteItems = [];
+  List<String> _favoriteItems = [];
 
   String get name {
     return _name;
@@ -50,7 +50,7 @@ class User with ChangeNotifier {
     return {..._cartItems};
   }
 
-  List<Product> get favoriteItems {
+  List<String> get favoriteItems {
     return [..._favoriteItems];
   }
 
@@ -119,6 +119,11 @@ class User with ChangeNotifier {
       } else {
         _isAdmin = false;
       }
+      for (var i = 0; i < responseData['favoriteProducts'].length; i++) {
+        _favoriteItems.add(responseData['favoriteProducts'][i]);
+      }
+      //_favoriteItems = responseData['favoriteProducts'];
+      print(_favoriteItems);
       // _token = responseData['token'];
       print(responseData['cart']['cartProducts'].runtimeType);
       // Cartt aux = responseData['cart'];
@@ -218,7 +223,8 @@ class User with ChangeNotifier {
   }
 
   Future<void> favorite(String idProd, String idUser) async {
-    final url = Uri.parse('http://localhost:8080/api/favorite');
+    final url = Uri.parse('http://localhost:8080/users/favorites/add');
+    print("teeeest");
 
     try {
       final response = await http.post(
@@ -227,16 +233,36 @@ class User with ChangeNotifier {
           "Content-Type": "application/json; charset=UTF-8"
         },
         body: json.encode({
-          'idProd': idProd,
-          'idUser': idUser,
+          'userId': idUser,
+          'productId': idProd,
         }),
       );
 
-      final responseData = json.decode(response.body);
+      _favoriteItems.add(idProd);
 
-      if (responseData['error'] != null) {
-        throw HttpException(responseData['error']['message']);
-      }
+      notifyListeners();
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  Future<void> unfavorite(String idProd, String idUser) async {
+    final url = Uri.parse('http://localhost:8080/users/favorites/remove');
+    print("teeeest");
+
+    try {
+      final response = await http.post(
+        url,
+        headers: <String, String>{
+          "Content-Type": "application/json; charset=UTF-8"
+        },
+        body: json.encode({
+          'userId': idUser,
+          'productId': idProd,
+        }),
+      );
+
+      _favoriteItems.add(idProd);
 
       notifyListeners();
     } catch (error) {

@@ -21,33 +21,7 @@ class Product with ChangeNotifier {
     this.isFavorite = false,
   });
 
-  void _setFavValue(bool newValue) {
-    isFavorite = newValue;
-
-    notifyListeners();
-  }
-
-  Future<void> toggleFavoriteStatus() async {
-    //   final url = Uri.parse(
-    //       'https://shop-app-20317-default-rtdb.europe-west1.firebasedatabase.app/products/$id.json');
-    //   final oldStatus = isFavorite; // Optimistic updating
-
-    isFavorite = !isFavorite;
-    notifyListeners();
-
-    //   try {
-    //     final response = await http.patch(
-    //       url,
-    //       body: json.encode({
-    //         'isFavorite': isFavorite,
-    //       }),
-    //     );
-
-    //     if (response.statusCode >= 400) {
-    //       _setFavValue(oldStatus);
-    //     }
-    //   } catch (error) {
-    //     _setFavValue(oldStatus);
-    //   }
+  bool isFav(List<String> prodId) {
+    return prodId.contains(id);
   }
 }

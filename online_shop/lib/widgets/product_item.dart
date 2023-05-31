@@ -48,8 +48,13 @@ class _ProductItemState extends State<ProductItem> {
     _form.currentState?.save();
 
     try {
-      await Provider.of<User>(context, listen: false)
-          .favorite(_idProd, _idUser);
+      if (widget.product.isFav(Provider.of<User>(context, listen: false).favoriteItems)) {
+        await Provider.of<User>(context, listen: false)
+            .favorite(_idProd, _idUser);
+      } else {
+        await Provider.of<User>(context, listen: false)
+            .unfavorite(_idProd, _idUser);
+      }
     } catch (error) {
       await showDialog<void>(
         context: context,
@@ -73,6 +78,7 @@ class _ProductItemState extends State<ProductItem> {
   Widget build(BuildContext context) {
     final cart = Provider.of<Cart>(context);
     final idUser = Provider.of<User>(context).id;
+    final favIds = Provider.of<User>(context).favoriteItems;
 
     Timer timer;
     bool isSnackbarTapped = false;
@@ -122,13 +128,14 @@ class _ProductItemState extends State<ProductItem> {
                     highlightColor: Colors.transparent,
                     padding: const EdgeInsets.only(top: 15, left: 15),
                     icon: Icon(
-                      widget.product.isFavorite
+                      widget.product.isFav(favIds)
                           ? Icons.favorite_outlined
                           : Icons.favorite_outline_outlined,
                     ),
                     onPressed: () {
                       Provider.of<User>(context, listen: false).isAuth
-                          ? widget.product.toggleFavoriteStatus()
+                          ? (widget.product.isFav(favIds)
+                          ? favIds.remove(widget.product.id) : favIds.add(widget.product.id))
                           : const SizedBox(
                               height: 0,
                             );

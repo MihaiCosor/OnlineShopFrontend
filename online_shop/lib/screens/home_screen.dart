@@ -26,7 +26,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var _isInit = false;
+  var _isInit = true;
   var _isLoading = false;
 
   var _page = 1;
@@ -95,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             .colorScheme
                             .primary
                             .withOpacity(0.5),
-                        totalPages: (products.length / 10).round() + 1,
+                        totalPages: (products.length / 10).floor() + 1,
                         onPageChanged: (page) {
                           setState(() {
                             _page = page;
