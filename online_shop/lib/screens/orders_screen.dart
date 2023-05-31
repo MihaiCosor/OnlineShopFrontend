@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/orders.dart' show Orders;
+import '../providers/user.dart';
 import '../widgets/order_item.dart';
 import '../widgets/app_drawer.dart';
 
@@ -18,14 +19,17 @@ class _OrdersScreenState extends State<OrdersScreen> {
   late Future _ordersFuture;
 
   Future _obtainOrdersFuture() {
-    return Provider.of<Orders>(context, listen: false).fetchAndSetOrders();
+    final userId = Provider.of<User>(context).id;
+    final isAdmin = Provider.of<User>(context).isAdmin;
+
+    return Provider.of<Orders>(context, listen: false).fetchAndSetOrders(userId, isAdmin);
   }
 
   @override
-  void initState() {
+  void didChangeDependencies() {
     _ordersFuture = _obtainOrdersFuture();
 
-    super.initState();
+    super.didChangeDependencies();
   }
 
   @override

@@ -8,12 +8,14 @@ import './cart.dart';
 
 class Order {
   final String userId;
+  final String orderId;
   final Cart cart;
   final double amount;
   final String status;
 
   Order({
     required this.userId,
+    required this.orderId,
     required this.cart,
     required this.amount,
     required this.status,
@@ -27,30 +29,33 @@ class Orders with ChangeNotifier {
     return [..._orders];
   }
 
-  Future<void> fetchAndSetOrders() async {
-    final url = Uri.parse('http://localhost:8080/api/orders/status');
+  Future<void> fetchAndSetOrders(String userId, bool isAdmin) async {
+    print(userId);
+    final url = isAdmin ? Uri.parse('http://localhost:8080/api/order/status/' + userId) : Uri.parse('http://localhost:8080/api/order/user/' + userId);
 
     final response = await http.get(url);
 
     final List<Order> loadedOrders = [];
-    final extractedData = json.decode(response.body) as Map<String, dynamic>;
+    final extractedData = json.decode(response.body);
+    print(extractedData);
 
-    Map<String, CartProduct> cartItems = {};
-    Map<String, dynamic> aux = extractedData['cart']['cartProducts'];
-    for (var i = 0; i < aux.length; i++) {
-      cartItems[aux.keys.elementAt(i)] = CartProduct(
-        id: aux.values.elementAt(i)['productId'],
-        title: aux.values.elementAt(i)['title'],
-        quantity: aux.values.elementAt(i)['quantity'],
-        price: aux.values.elementAt(i)['price'],
-      );
-    }
+    for (var i = 0; i < extractedData.length; i++) {    Map<String, CartProduct> cartItems = {};
+      Map<String, dynamic> aux = extractedData[i]['cart']['cartProducts'];
+      for (var j = 0; j < aux.length; j++) {
+        cartItems[aux.keys.elementAt(j)] = CartProduct(
+          id: aux.values.elementAt(j)['productId'],
+          title: aux.values.elementAt(j)['title'],
+          quantity: aux.values.elementAt(j)['quantity'],
+          price: aux.values.elementAt(j)['price'],
+        );
+      }
+      print("cartItems: " + cartItems.toString());
 
-    for (var i = 0; i < extractedData.length; i++) {
       loadedOrders.add(Order(
+          orderId: extractedData[i]['id'],
           userId: extractedData[i]['userId'],
-          amount: extractedData[i]['amount'],
-          status: extractedData[i]['status'],
+          amount: cartItems.values.toList().fold(0, (sum, item) => sum + item.price),
+          status: extractedData[i]['orderStatus'],
           cart: Cart(cartItems)));
     }
 
@@ -61,9 +66,12 @@ class Orders with ChangeNotifier {
 
   Future<void> addOrder(List<CartProduct> cartproducts, String userId) async {
     final url = Uri.parse('http://localhost:8080/api/cart/placeOrder');
-
+    print("userId: " + userId);
     final response = await http.post(
       url,
+              headers: <String, String>{
+          "Content-Type": "application/json; charset=UTF-8"
+        },
       body: json.encode({
         'userId': userId,
       }),
@@ -72,11 +80,30 @@ class Orders with ChangeNotifier {
     _orders.insert(
       0,
       Order(
+        orderId: response.body,
         userId: userId,
         amount: cartproducts.fold(0, (sum, item) => sum + item.price),
         cart: Cart({for (var e in cartproducts) e.id: e}),
         status: 'PENDING',
       ),
+    );
+
+    print("order id: " + response.body);
+
+    notifyListeners();
+  }
+
+  Future<void> updateOrder(String orderId, String userId) async {
+    final url = Uri.parse('http://localhost:8080/api/order/delivered');
+    final response = await http.post(
+      url,
+      headers: <String, String>{
+          "Content-Type": "application/json; charset=UTF-8"
+        },
+      body: json.encode({
+        'userId': userId,
+        'orderId': orderId,
+      }),
     );
 
     notifyListeners();

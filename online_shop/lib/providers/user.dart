@@ -23,7 +23,7 @@ class User with ChangeNotifier {
   String _email = '';
 
   bool _isAdmin = false;
-  bool _isLogged = true;
+  bool _isLogged = false;
 
   String? _token = '';
 
@@ -110,7 +110,15 @@ class User with ChangeNotifier {
       _name = responseData['name'];
       _surname = responseData['surname'];
       _email = responseData['email'];
-      // _isAdmin = responseData['isAdmin'];
+      String userRole = responseData['userRole'];
+      print(userRole);
+      if (userRole == "ADMIN") {
+        print("admin");
+        _isAdmin = true;
+        print("gata");
+      } else {
+        _isAdmin = false;
+      }
       // _token = responseData['token'];
       print(responseData['cart']['cartProducts'].runtimeType);
       // Cartt aux = responseData['cart'];

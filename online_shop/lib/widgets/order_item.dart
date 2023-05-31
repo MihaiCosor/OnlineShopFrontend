@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/orders.dart';
+import '../providers/user.dart';
 
 class OrderItem extends StatefulWidget {
   final Order order;
@@ -25,6 +26,8 @@ class _OrderItemState extends State<OrderItem> {
 
   @override
   Widget build(BuildContext context) {
+    final userId = Provider.of<User>(context).id;
+    
     return Card(
       margin: const EdgeInsets.all(10),
       child: Column(
@@ -45,7 +48,12 @@ class _OrderItemState extends State<OrderItem> {
                   }).toList(),
                   onChanged: (String? newValue) {
                     setState(() {
-                      //dropdownvalue = newValue!;
+                      if (newValue == 'DELIVERED') {
+                        Provider.of<Orders>(context, listen: false)
+                            .updateOrder(widget.order.orderId, userId);
+                        Provider.of<Orders>(context, listen: false)
+                            .fetchAndSetOrders(userId, true);
+                      }
                     });
                   },
                 ),
@@ -55,7 +63,7 @@ class _OrderItemState extends State<OrderItem> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  '${widget.order.amount} lei',
+                  '${widget.order.amount.toStringAsFixed(2)} lei',
                   textScaleFactor: 1.3,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,

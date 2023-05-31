@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/cart.dart' show Cart;
+import '../providers/user.dart';
 import '../widgets/cart_item.dart';
 import '../widgets/app_drawer.dart';
 import '../providers/orders.dart';
@@ -88,6 +89,8 @@ class _OrderButtonState extends State<OrderButton> {
 
   @override
   Widget build(BuildContext context) {
+    final userId = Provider.of<User>(context).id;
+
     return TextButton(
       onPressed: (widget.cart.totalAmount <= 0 || _isLoading)
           ? null
@@ -95,10 +98,10 @@ class _OrderButtonState extends State<OrderButton> {
               setState(() {
                 _isLoading = true;
               });
-
+              print("order button pressed");
               await Provider.of<Orders>(context, listen: false).addOrder(
                 widget.cart.items.values.toList(),
-                widget.cart.totalAmount as String,
+                userId,
               );
 
               setState(() {
